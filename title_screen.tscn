@@ -1,6 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://c1c8ks4aii8ip"]
+[gd_scene load_steps=4 format=3 uid="uid://c1c8ks4aii8ip"]
 
-[ext_resource type="Script" uid="uid://dmb03w2aph6v0" path="res://scripts/title_screen.gd" id="1_v6p8y"]
+[ext_resource type="Theme" uid="uid://dyhjmh1vxjsi1" path="res://Content/main_theme.tres" id="1_ak2if"]
+[ext_resource type="Script" uid="uid://dmb03w2aph6v0" path="res://Source/title_screen.gd" id="1_v6p8y"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_v6p8y"]
+font_size = 78
 
 [node name="MainScreen" type="Control"]
 layout_mode = 3
@@ -9,6 +13,60 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_ak2if")
 script = ExtResource("1_v6p8y")
 
-[node name="Node2D" type="Node2D" parent="."]
+[node name="Title" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.15
+anchor_right = 0.5
+anchor_bottom = 0.15
+grow_horizontal = 2
+theme = ExtResource("1_ak2if")
+text = "TITLE"
+label_settings = SubResource("LabelSettings_v6p8y")
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="PlayButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -128.0
+offset_top = -64.0
+offset_right = 128.0
+offset_bottom = 64.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_ak2if")
+metadata/_edit_use_anchors_ = true
+
+[node name="AuthPanel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.200521
+anchor_top = 0.185185
+anchor_right = 0.799479
+anchor_bottom = 0.814815
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_ak2if")
+metadata/_edit_use_anchors_ = true
+
+[node name="SignIn" type="PanelContainer" parent="AuthPanel"]
+visible = false
+layout_mode = 2
+theme = ExtResource("1_ak2if")
+
+[node name="SignUp" type="PanelContainer" parent="AuthPanel"]
+layout_mode = 2
+theme = ExtResource("1_ak2if")
