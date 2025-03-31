@@ -71,3 +71,5 @@ theme = ExtResource("1_ak2if")
 [node name="SignUp" type="PanelContainer" parent="AuthPanel"]
 layout_mode = 2
 theme = ExtResource("1_ak2if")
+
+[connection signal="pressed" from="PlayButton" to="." method="start_playing"]

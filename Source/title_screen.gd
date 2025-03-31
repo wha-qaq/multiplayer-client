@@ -5,7 +5,7 @@ func start_playing():
 		$AuthPanel.show()
 		return
 	
-	
+	get_tree().change_scene_to_file("res://Scenes/room_select.tscn")
 
 func _ready():
 	pass
