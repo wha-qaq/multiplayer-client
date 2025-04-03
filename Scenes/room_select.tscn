@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bgwjwdg5fu2qs"]
 
-[ext_resource type="Script" path="res://Source/room_select.gd" id="1_0dhwt"]
+[ext_resource type="Script" uid="uid://cp60kidq0vyyw" path="res://Source/room_select.gd" id="1_0dhwt"]
 
 [node name="RoomSelect" type="Control"]
 layout_mode = 3
