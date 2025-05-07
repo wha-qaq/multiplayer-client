@@ -1,8 +1,9 @@
-extends HTTPRequest
+extends Node
 
-const DOMAIN = "localhost:5000"
-const LOGIN = DOMAIN + "/login"
+const DOMAIN = "https://localhost:5000"
+const LOGIN = DOMAIN + "/login?username=%s&password=%s"
 
+var request : HTTPRequest
 var auth : String = ""
 
 func can_login() -> bool:
@@ -11,9 +12,24 @@ func can_login() -> bool:
 func save_token():
 	pass
 
-func get_token():
-	pass
-	#auth = $HTTPRequest.request("localhost:5000").send_req
+func request_token(username, password):
+	#var error = request.request(LOGIN % [username, password], [], HTTPClient.METHOD_POST)
+	request.request_completed.connect(_token_recieved)
+	var error = request.request("http://example.com")
+	return error
+
+func _token_recieved(error, status, headers, d):
+	if error != OK:
+		return
+	if error != status:
+		return
+	if not ("Content-Type: text/html" in headers):
+		return
+	print(d)
 
 func _ready() -> void:
-	print(": ", request("https://example.com"))
+	request = HTTPRequest.new()
+	add_child(request)
+	
+	print(request_token("hello", "world"))
+	print(auth)

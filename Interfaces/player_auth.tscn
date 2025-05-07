@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://lql3uadd55i8"]
-
-[ext_resource type="Script" uid="uid://bu27bj5pp7hr0" path="res://Source/player_auth.gd" id="1_3bw13"]
-
-[node name="PlayerAuth" type="HTTPRequest"]
-script = ExtResource("1_3bw13")
