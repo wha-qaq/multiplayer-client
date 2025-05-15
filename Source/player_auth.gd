@@ -43,5 +43,3 @@ func _token_recieved(result, response_code, headers, body : PackedByteArray):
 
 func _ready() -> void:
 	add_child(request)
-	
-	request_login("hello", "world") # NOTE: Test code, delete later
