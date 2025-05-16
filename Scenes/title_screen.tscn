@@ -57,6 +57,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="SignIn" type="Control" parent="AuthPanel"]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -64,34 +65,29 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Username" type="TextEdit" parent="AuthPanel/SignIn"]
+[node name="Username" type="LineEdit" parent="AuthPanel/SignIn"]
 layout_mode = 1
 anchors_preset = -1
+anchor_left = 0.0231481
 anchor_top = 0.1
-anchor_right = 1.0
-anchor_bottom = 0.1
-offset_left = 16.0
-offset_right = -16.0
-offset_bottom = 64.0
-grow_horizontal = 2
-grow_vertical = 0
+anchor_right = 0.976563
+anchor_bottom = 0.264609
+tooltip_text = "The name that will be used to log into the website"
 theme = ExtResource("1_ak2if")
 placeholder_text = "Username"
+metadata/_edit_use_anchors_ = true
 
-[node name="Password" type="TextEdit" parent="AuthPanel/SignIn"]
+[node name="Password" type="LineEdit" parent="AuthPanel/SignIn"]
 layout_mode = 1
 anchors_preset = -1
-anchor_top = 0.1
-anchor_right = 1.0
-anchor_bottom = 0.1
-offset_left = 16.0
-offset_top = 80.0
-offset_right = -16.0
-offset_bottom = 144.0
-grow_horizontal = 2
-grow_vertical = 0
+anchor_left = 0.0231481
+anchor_top = 0.305761
+anchor_right = 0.976563
+anchor_bottom = 0.47037
+tooltip_text = "The name that will be used to log into the website"
 theme = ExtResource("1_ak2if")
 placeholder_text = "Password"
+metadata/_edit_use_anchors_ = true
 
 [node name="ConfirmSignIn" type="Button" parent="AuthPanel/SignIn"]
 custom_minimum_size = Vector2(256, 72)
@@ -118,16 +114,39 @@ offset_right = -8.0
 offset_bottom = -8.0
 grow_horizontal = 0
 grow_vertical = 0
-text = "No Account? Sign Up!"
+text = "No Account?
+Click here to Sign Up!"
 
 [node name="SignUp" type="Control" parent="AuthPanel"]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="Username" type="LineEdit" parent="AuthPanel/SignUp"]
+layout_mode = 2
+anchor_left = 0.0231481
+anchor_top = 0.1
+anchor_right = 0.976563
+anchor_bottom = 0.264609
+tooltip_text = "The name that will be used to log into the website"
+theme = ExtResource("1_ak2if")
+placeholder_text = "Username"
+metadata/_edit_use_anchors_ = true
+
+[node name="Password" type="LineEdit" parent="AuthPanel/SignUp"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.0231481
+anchor_top = 0.305761
+anchor_right = 0.976563
+anchor_bottom = 0.47037
+tooltip_text = "The name that will be used to log into the website"
+theme = ExtResource("1_ak2if")
+placeholder_text = "Password"
+metadata/_edit_use_anchors_ = true
 
 [node name="ShowSignIn" type="Button" parent="AuthPanel/SignUp"]
 custom_minimum_size = Vector2(196, 52)
@@ -143,7 +162,25 @@ offset_right = -8.0
 offset_bottom = -8.0
 grow_horizontal = 0
 grow_vertical = 0
-text = "No Account? Sign Up!"
+text = "Have an account?
+Sign In Here."
+autowrap_mode = 2
+
+[node name="ConfirmSignUp" type="Button" parent="AuthPanel/SignUp"]
+custom_minimum_size = Vector2(256, 72)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -128.0
+offset_top = -104.0
+offset_right = 128.0
+offset_bottom = -32.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Sign Up"
 
 [node name="Panel" type="Panel" parent="AuthPanel"]
 modulate = Color(0, 0, 0, 1)
@@ -162,3 +199,4 @@ theme = ExtResource("1_ak2if")
 [connection signal="pressed" from="AuthPanel/SignIn/ConfirmSignIn" to="." method="_on_sign_in_pressed"]
 [connection signal="pressed" from="AuthPanel/SignIn/ShowSignUp" to="." method="_show_sign_up"]
 [connection signal="pressed" from="AuthPanel/SignUp/ShowSignIn" to="." method="_show_sign_in"]
+[connection signal="pressed" from="AuthPanel/SignUp/ConfirmSignUp" to="." method="_on_sign_up_pressed"]
