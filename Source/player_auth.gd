@@ -34,7 +34,6 @@ func request_creation(username, password):
 	return request.open_request(CREATE_ACCOUNT % [username, password], [], HTTPClient.METHOD_POST)
 
 func _token_recieved(response : Variant):
-	print(response)
 	if not (response is Dictionary):
 		return
 	
