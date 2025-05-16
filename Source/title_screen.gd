@@ -23,7 +23,7 @@ func _on_sign_in_pressed() -> void:
 	PlayerAuth.request_login(SignInUsername.text, SignInPassword.text)
 
 func _on_sign_up_pressed() -> void:
-	PlayerAuth.request_creation(SignInUsername.text, SignInPassword.text)
+	PlayerAuth.request_creation(SignUpUsername.text, SignUpPassword.text)
 
 func _show_sign_up() -> void:
 	SignInPanel.hide()
