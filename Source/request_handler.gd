@@ -23,6 +23,10 @@ func parse_request(result : HTTPRequest.Result, response_code : int, _headers : 
 		MessagingSystem.add_message("Unable to connect to server at this time")
 		return
 	
+	if response_code == HTTPClient.RESPONSE_INTERNAL_SERVER_ERROR:
+		MessagingSystem.add_message("Server encountered an error")
+		return
+	
 	var json = JSON.new()
 	var err = json.parse(body.get_string_from_utf8())
 	if err:

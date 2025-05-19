@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 PlayerAuth="*res://Source/player_auth.gd"
 MessagingSystem="*res://Source/messaging_system.gd"
+RoomConnector="*res://Source/room_connector.gd"
 
 [editor]
 
