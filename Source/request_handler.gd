@@ -38,7 +38,7 @@ func parse_request(result : HTTPRequest.Result, response_code : int, _headers : 
 		MessagingSystem.add_message("Could not interpret server's response, your app may be outdated")
 		return
 	
-	if response_code != HTTPClient.RESPONSE_OK:
+	if response_code < 200 or response_code >= 300:
 		MessagingSystem.add_message("Error occurred: " + str(response.get("error")))
 		return
 	
