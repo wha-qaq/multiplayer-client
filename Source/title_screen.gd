@@ -19,10 +19,10 @@ func start_playing():
 	
 	continue_room_select()
 
-func _on_sign_in_pressed() -> void:
+func start_sign_in(_a = null) -> void:
 	PlayerAuth.request_login(SignInUsername.text, SignInPassword.text)
 
-func _on_sign_up_pressed() -> void:
+func start_sign_up(_a = null) -> void:
 	PlayerAuth.request_creation(SignUpUsername.text, SignUpPassword.text)
 
 func _show_sign_up() -> void:

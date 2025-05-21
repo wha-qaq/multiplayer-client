@@ -148,24 +148,6 @@ theme = ExtResource("1_ak2if")
 placeholder_text = "Password"
 metadata/_edit_use_anchors_ = true
 
-[node name="ShowSignIn" type="Button" parent="AuthPanel/SignUp"]
-custom_minimum_size = Vector2(196, 52)
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -204.0
-offset_top = -60.0
-offset_right = -8.0
-offset_bottom = -8.0
-grow_horizontal = 0
-grow_vertical = 0
-text = "Have an account?
-Sign In Here."
-autowrap_mode = 2
-
 [node name="ConfirmSignUp" type="Button" parent="AuthPanel/SignUp"]
 custom_minimum_size = Vector2(256, 72)
 layout_mode = 1
@@ -182,6 +164,24 @@ grow_horizontal = 2
 grow_vertical = 0
 text = "Sign Up"
 
+[node name="ShowSignIn" type="Button" parent="AuthPanel/SignUp"]
+custom_minimum_size = Vector2(196, 52)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -204.0
+offset_top = -62.0
+offset_right = -8.0
+offset_bottom = -8.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "Have an account?
+Sign In Here."
+autowrap_mode = 2
+
 [node name="Panel" type="Panel" parent="AuthPanel"]
 modulate = Color(0, 0, 0, 1)
 self_modulate = Color(0, 0, 0, 1)
@@ -196,7 +196,11 @@ mouse_filter = 2
 theme = ExtResource("1_ak2if")
 
 [connection signal="pressed" from="PlayButton" to="." method="start_playing"]
-[connection signal="pressed" from="AuthPanel/SignIn/ConfirmSignIn" to="." method="_on_sign_in_pressed"]
+[connection signal="text_submitted" from="AuthPanel/SignIn/Username" to="." method="start_sign_in"]
+[connection signal="text_submitted" from="AuthPanel/SignIn/Password" to="." method="start_sign_in"]
+[connection signal="pressed" from="AuthPanel/SignIn/ConfirmSignIn" to="." method="start_sign_in"]
 [connection signal="pressed" from="AuthPanel/SignIn/ShowSignUp" to="." method="_show_sign_up"]
+[connection signal="text_submitted" from="AuthPanel/SignUp/Username" to="." method="start_sign_up"]
+[connection signal="text_submitted" from="AuthPanel/SignUp/Password" to="." method="start_sign_up"]
+[connection signal="pressed" from="AuthPanel/SignUp/ConfirmSignUp" to="." method="start_sign_up"]
 [connection signal="pressed" from="AuthPanel/SignUp/ShowSignIn" to="." method="_show_sign_in"]
-[connection signal="pressed" from="AuthPanel/SignUp/ConfirmSignUp" to="." method="_on_sign_up_pressed"]
