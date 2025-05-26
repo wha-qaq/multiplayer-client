@@ -17,7 +17,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-PlayerAuth="*res://Source/player_auth.gd"
+PlayerAuth="*res://Source/Networking/player_auth.gd"
 MessagingSystem="*res://Source/messaging_system.gd"
 RoomConnector="*res://Source/room_connector.gd"
 

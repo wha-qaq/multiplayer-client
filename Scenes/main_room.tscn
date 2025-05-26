@@ -1,7 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://nuqm4wty6am1"]
+[gd_scene load_steps=7 format=3 uid="uid://nuqm4wty6am1"]
 
+[ext_resource type="Script" uid="uid://b8wl1pqpavw0t" path="res://Source/main_room.gd" id="1_b2wh1"]
 [ext_resource type="Script" uid="uid://d3jt8ayf2tkmm" path="res://Source/character.gd" id="1_kc0wd"]
 [ext_resource type="Texture2D" uid="uid://bbrfvri48mwbc" path="res://icon.svg" id="2_2euvg"]
+[ext_resource type="Script" uid="uid://2kwfykyajhc4" path="res://Source/character_replicator.gd" id="4_giuuk"]
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_kmhja"]
 
@@ -9,6 +11,7 @@
 radius = 64.0
 
 [node name="MainRoom" type="Node2D"]
+script = ExtResource("1_b2wh1")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(1024, 1024)
@@ -25,3 +28,37 @@ shape = SubResource("CircleShape2D_d08tv")
 
 [node name="Camera2D" type="Camera2D" parent="MainCharacter"]
 position_smoothing_enabled = true
+
+[node name="GUI" type="CanvasLayer" parent="."]
+
+[node name="Main" type="Control" parent="GUI"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+metadata/_edit_use_anchors_ = true
+
+[node name="MessageBox" type="LineEdit" parent="GUI/Main"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.0546875
+anchor_top = 1.0
+anchor_right = 0.945313
+anchor_bottom = 1.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 0
+metadata/_edit_use_anchors_ = true
+
+[node name="CharacterReplicator" type="Node2D" parent="."]
+script = ExtResource("4_giuuk")
+
+[node name="BaseReplication" type="Sprite2D" parent="CharacterReplicator"]
+position = Vector2(158, 93)
+texture = ExtResource("2_2euvg")
+
+[connection signal="text_submitted" from="GUI/Main/MessageBox" to="." method="_send_message"]

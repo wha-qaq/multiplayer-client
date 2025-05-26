@@ -64,6 +64,9 @@ func request_get_room(room_id):
 func request_join_room(room_id : int):
 	RoomConnector.join_room(room_id)
 
+func initiate_join_room(socket : WebSocketPeer):
+	get_tree().change_scene_to_file("res://Scenes/main_room.tscn")
+
 func _ready() -> void:
 	room_request.timeout = 3
 	room_request.request_parsed.connect(populate_rooms)
@@ -77,6 +80,8 @@ func _ready() -> void:
 	room_get.request_parsed.connect(display_room)
 	add_child(room_get)
 	
+	RoomConnector.on_connection.connect(initiate_join_room)
+	
 	await get_tree().process_frame
 	
 	print(request_rooms())
@@ -88,4 +93,3 @@ func initiate_room() -> void:
 		return
 	
 	request_join_room(selected_room)
-	print("let me join!!!")

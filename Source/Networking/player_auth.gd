@@ -8,17 +8,19 @@ const AUTH_HEADER = "jwt: %s"
 
 var request : RequestHandler = RequestHandler.new()
 var auth : String = ""
+var uid : int = -1
 var room_id : int = -1
 
 signal on_authenticated
 
 func can_login() -> bool:
-	if not auth:
+	if not auth or not uid:
 		return false
 	return true
 
-func save_token(token : String):
+func save_auth(token : String, new_uid : int):
 	auth = token
+	uid = new_uid
 	# TODO: Saving token
 	on_authenticated.emit()
 
@@ -26,6 +28,9 @@ func get_auth_token():
 	if not auth:
 		return ""
 	return AUTH_HEADER % auth
+
+func get_uid():
+	return uid
 
 func request_login(username, password):
 	return request.open_request(LOGIN % [username, password], [], HTTPClient.METHOD_POST)
@@ -41,7 +46,7 @@ func _token_recieved(response : Variant):
 		MessagingSystem.add_message("Failed to authenticate, please try again")
 		return
 	
-	save_token(response["token"])
+	save_auth(response["token"], 1)
 
 func _ready() -> void:
 	request.timeout = 3
