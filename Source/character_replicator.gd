@@ -5,11 +5,13 @@ const base_message = preload("res://Scenes/Objects/message.tscn")
 func _ready():
 	$BaseReplication.hide()
 
-func spawn_character(uid : int):
+func spawn_character(uid : int, character_position : Vector2):
 	var clone = $BaseReplication.duplicate()
 	clone.set_meta("uid", uid)
 	
 	add_child(clone)
+	clone.global_position = character_position
+	clone.show()
 
 func find_character(uid : int) -> Node2D:
 	for clone in get_children():
@@ -18,10 +20,14 @@ func find_character(uid : int) -> Node2D:
 	
 	return null
 
-func say_character(uid : int, message : String):
+func say_character(uid : int, str_message : String):
 	var char = find_character(uid)
 	if not char:
 		return
+	
+	var message = base_message.instantiate()
+	message.say(str_message)
+	char.add_child(message)
 
 func move_character(uid : int, character_position : Vector2):
 	var char = find_character(uid)

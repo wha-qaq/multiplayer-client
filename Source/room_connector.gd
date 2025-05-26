@@ -39,14 +39,19 @@ func move_character(new_pos : Vector2) -> bool:
 	socket.send_text(MOVE_FORMAT % [new_pos.x, new_pos.y])
 	return true
 
+func request_joined() -> bool:
+	if socket.get_ready_state() != WebSocketPeer.STATE_OPEN:
+		return false
+	
+	socket.send_text("join")
+	return true
+
 func _ready():
 	set_process(false)
 	on_connection.connect(func(con : WebSocketPeer):
 		print("Connected!")
 		await get_tree().create_timer(1).timeout
 		con.send_text("hello"))
-	
-	change_received.connect(print)
 
 func _process(_delta):
 	socket.poll()

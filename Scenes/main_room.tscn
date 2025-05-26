@@ -11,9 +11,11 @@
 radius = 64.0
 
 [node name="MainRoom" type="Node2D"]
+y_sort_enabled = true
 script = ExtResource("1_b2wh1")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+z_index = -1
 scale = Vector2(1024, 1024)
 texture = SubResource("PlaceholderTexture2D_kmhja")
 
@@ -55,10 +57,13 @@ grow_vertical = 0
 metadata/_edit_use_anchors_ = true
 
 [node name="CharacterReplicator" type="Node2D" parent="."]
+y_sort_enabled = true
 script = ExtResource("4_giuuk")
 
-[node name="BaseReplication" type="Sprite2D" parent="CharacterReplicator"]
-position = Vector2(158, 93)
+[node name="BaseReplication" type="Node2D" parent="CharacterReplicator"]
+position = Vector2(225, 98)
+
+[node name="Sprite" type="Sprite2D" parent="CharacterReplicator/BaseReplication"]
 texture = ExtResource("2_2euvg")
 
 [connection signal="text_submitted" from="GUI/Main/MessageBox" to="." method="_send_message"]

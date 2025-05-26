@@ -46,7 +46,7 @@ func _token_recieved(response : Variant):
 		MessagingSystem.add_message("Failed to authenticate, please try again")
 		return
 	
-	save_auth(response["token"], 1)
+	save_auth(response["token"], response["uid"])
 
 func _ready() -> void:
 	request.timeout = 3
