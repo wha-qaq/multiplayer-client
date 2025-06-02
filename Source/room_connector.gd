@@ -1,6 +1,10 @@
 extends Node
 
+const LOCAL_HOST = "127.0.0.1"
+
 const DOMAIN_WS = "ws://127.0.0.1:5000"
+const HOST = "127.0.0.1"
+const PORT = 5000
 const JOIN_ROOM = DOMAIN_WS + "/join?room_id=%s"
 
 const MESSAGE_FORMAT = "m%s"
@@ -11,19 +15,32 @@ signal change_received(String)
 
 @onready var socket = WebSocketPeer.new()
 var prev_state : int = -1
+var udp_peer = PacketPeerUDP.new()
 
 func is_room_connected() -> bool:
 	return socket.get_ready_state() == WebSocketPeer.STATE_OPEN
 
-func join_room(room_id : int):
+func join_room(room_id : int) -> bool:
 	if socket.get_ready_state() != WebSocketPeer.STATE_CLOSED:
 		print("Already connecting")
-		return
+		return false
 	
-	socket.handshake_headers = [PlayerAuth.get_auth_token()]
+	var port = 10000
+	while true:
+		var result = udp_peer.bind(port, LOCAL_HOST)
+		if result == OK:
+			break
+		
+		if result != ERR_UNAVAILABLE:
+			print("Error occurred while binding port: ", result)
+			return false
+		port = port + 1
+		
+	socket.handshake_headers = [PlayerAuth.get_auth_token(), "port:%s" % port]
 	socket.connect_to_url(JOIN_ROOM % room_id)
 	print("Trying to connect")
 	set_process(true)
+	return true
 
 func send_message(message : String) -> bool:
 	if socket.get_ready_state() != WebSocketPeer.STATE_OPEN:
@@ -33,10 +50,11 @@ func send_message(message : String) -> bool:
 	return true
 
 func move_character(new_pos : Vector2) -> bool:
-	if socket.get_ready_state() != WebSocketPeer.STATE_OPEN:
-		return false
-	
-	socket.send_text(MOVE_FORMAT % [new_pos.x, new_pos.y])
+	udp_peer.put_packet(("%s,%s" % [new_pos.x, new_pos.y]).to_utf8_buffer())
+	#if socket.get_ready_state() != WebSocketPeer.STATE_OPEN:
+		#return false
+	#
+	#socket.send_text(MOVE_FORMAT % [new_pos.x, new_pos.y])
 	return true
 
 func request_joined() -> bool:
@@ -47,6 +65,8 @@ func request_joined() -> bool:
 	return true
 
 func _ready():
+	udp_peer.set_dest_address(HOST, PORT)
+	
 	set_process(false)
 	on_connection.connect(func(con : WebSocketPeer):
 		print("Connected!")
@@ -69,3 +89,4 @@ func _process(_delta):
 		var reason = socket.get_close_reason()
 		print("WebSocket closed with code: %d, reason %s. Clean: %s" % [code, reason, code != -1])
 		set_process(false)
+		udp_peer.close()

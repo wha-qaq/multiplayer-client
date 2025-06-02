@@ -64,7 +64,7 @@ func request_get_room(room_id):
 func request_join_room(room_id : int):
 	RoomConnector.join_room(room_id)
 
-func initiate_join_room(socket : WebSocketPeer):
+func initiate_join_room(_socket : WebSocketPeer):
 	get_tree().change_scene_to_file("res://Scenes/main_room.tscn")
 
 func _ready() -> void:
