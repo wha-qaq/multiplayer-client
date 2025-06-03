@@ -38,7 +38,12 @@ func handle_change(full_change : String):
 		print("Invalid response")
 		return
 	
-	var uid = int(result.get_string(1))
+	var uid_string = result.get_string(1)
+	if not uid_string.is_valid_int():
+		print("Invalid response")
+		return
+	
+	var uid = int(uid_string)
 	var change = result.get_string(2)
 	var data = result.get_string(3)
 	#print(PlayerAuth.get_uid(), ": ", uid, ", ", change, ", ", data)
@@ -46,6 +51,9 @@ func handle_change(full_change : String):
 	if change == "j":
 		var char_position = data.split(",", true, 1)
 		if char_position.size() < 2:
+			return
+		
+		if not (char_position[0].is_valid_float() and char_position[1].is_valid_float()):
 			return
 		
 		join_character(uid, Vector2(float(char_position[0]), float(char_position[1])))
@@ -58,22 +66,31 @@ func handle_change(full_change : String):
 	if change == "m":
 		say_message(uid, data)
 		return
-	
-	if change == "/":
-		var char_position = data.split(",", true, 1)
-		if char_position.size() < 2:
-			return
-		
-		move_character(uid, Vector2(float(char_position[0]), float(char_position[1])))
+
+func handle_move(full_move : String):
+	var content = full_move.split("|")
+	if content.size() < 2:
 		return
+	if not content[0].is_valid_int():
+		return
+	
+	var uid = int(content[0])
+	var positioning = content[1].split(",")
+	if positioning.size() < 2:
+		return
+	if not (positioning[0].is_valid_float() and positioning[1].is_valid_float()):
+		return
+	
+	move_character(uid, Vector2(float(positioning[0]), float(positioning[1])))
 
 func _ready() -> void:
 	RoomConnector.change_received.connect(handle_change)
+	RoomConnector.move_received.connect(handle_move)
 	RoomConnector.request_joined()
 	
 	var timer = Timer.new()
 	timer.autostart = true
-	timer.wait_time = 0.2
+	timer.wait_time = 0.05
 	add_child(timer)
 	timer.timeout.connect(func():
 		RoomConnector.move_character(main_character.global_position)

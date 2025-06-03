@@ -12,6 +12,7 @@ const MOVE_FORMAT = "/%s,%s"
 
 signal on_connection(WebSocketPeer)
 signal change_received(String)
+signal move_received(String)
 
 @onready var socket = WebSocketPeer.new()
 var prev_state : int = -1
@@ -74,7 +75,14 @@ func _ready():
 		con.send_text("hello"))
 
 func _process(_delta):
+	if udp_peer.get_available_packet_count() > 0:
+		var array_bytes = udp_peer.get_packet()
+		var packet_string = array_bytes.get_string_from_ascii()
+		print("Received message: ", packet_string)
+		move_received.emit(packet_string)
+	
 	socket.poll()
+	
 	var state = socket.get_ready_state()
 	if prev_state == WebSocketPeer.STATE_CONNECTING and state == WebSocketPeer.STATE_OPEN:
 		on_connection.emit(socket)
