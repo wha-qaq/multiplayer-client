@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://bgwjwdg5fu2qs"]
+[gd_scene load_steps=5 format=3 uid="uid://bgwjwdg5fu2qs"]
 
-[ext_resource type="Script" uid="uid://cp60kidq0vyyw" path="res://Source/room_select.gd" id="1_0dhwt"]
+[ext_resource type="Script" uid="uid://cp60kidq0vyyw" path="res://Source/UI/room_select.gd" id="1_0dhwt"]
 [ext_resource type="Theme" uid="uid://dyhjmh1vxjsi1" path="res://Content/main_theme.tres" id="2_4ihgt"]
+[ext_resource type="Script" uid="uid://bbea5oqu0kmmo" path="res://Source/UI/room_details.gd" id="3_k65m4"]
 [ext_resource type="Script" uid="uid://4pb87lbmwj85" path="res://Source/UI/room_selection.gd" id="3_tff5n"]
 
 [node name="RoomSelect" type="Control"]
@@ -15,13 +16,11 @@ script = ExtResource("1_0dhwt")
 
 [node name="Rooms" type="Control" parent="."]
 layout_mode = 1
-anchor_left = 0.05
-anchor_top = 0.05
 anchor_right = 0.65
-anchor_bottom = 0.95
+anchor_bottom = 1.0
 offset_left = 16.0
 offset_top = 16.0
-offset_bottom = -16.0
+offset_bottom = -96.0
 metadata/_edit_use_anchors_ = true
 
 [node name="Panel" type="Panel" parent="Rooms"]
@@ -60,10 +59,11 @@ layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.65
 anchor_top = 0.95
-anchor_right = 0.95
-anchor_bottom = 0.95
+anchor_right = 1.0
+anchor_bottom = 1.0
 offset_left = 8.0
-offset_bottom = -16.0
+offset_right = -16.0
+offset_bottom = -96.0
 grow_vertical = 0
 text = "Create Room"
 metadata/_edit_use_anchors_ = true
@@ -71,12 +71,13 @@ metadata/_edit_use_anchors_ = true
 [node name="RoomDetails" type="Control" parent="."]
 layout_mode = 1
 anchor_left = 0.65
-anchor_top = 0.05
-anchor_right = 0.95
-anchor_bottom = 0.95
+anchor_right = 1.0
+anchor_bottom = 1.0
 offset_left = 8.0
 offset_top = 16.0
-offset_bottom = -120.0
+offset_right = -16.0
+offset_bottom = -200.0
+script = ExtResource("3_k65m4")
 
 [node name="Panel" type="Panel" parent="RoomDetails"]
 layout_mode = 1
@@ -97,45 +98,10 @@ offset_bottom = -128.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="RoomDetails/ScrollContainer"]
+[node name="Container" type="VBoxContainer" parent="RoomDetails/ScrollContainer"]
 layout_mode = 2
-
-[node name="User" type="Control" parent="RoomDetails/ScrollContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 64)
-layout_mode = 2
-
-[node name="Username" type="Label" parent="RoomDetails/ScrollContainer/VBoxContainer/User"]
-layout_mode = 1
-anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 4.0
-grow_horizontal = 2
-grow_vertical = 2
-text = "USERNAME"
-vertical_alignment = 1
-
-[node name="OnlineStatus" type="ColorRect" parent="RoomDetails/ScrollContainer/VBoxContainer/User"]
-custom_minimum_size = Vector2(28, 28)
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 1.0
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-offset_right = -8.0
-grow_horizontal = 0
-grow_vertical = 2
-color = Color(0.377919, 0.377919, 0.377919, 1)
-
-[node name="Button" type="Button" parent="RoomDetails/ScrollContainer/VBoxContainer/User"]
-z_index = -2
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
 [node name="LineEdit" type="LineEdit" parent="RoomDetails"]
 custom_minimum_size = Vector2(0, 54)
@@ -179,6 +145,48 @@ grow_vertical = 0
 text = "MAKE
 OWNER"
 
+[node name="User" type="Control" parent="RoomDetails"]
+visible = false
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+anchors_preset = 0
+offset_left = 4.0
+offset_right = 333.0
+offset_bottom = 64.0
+
+[node name="Username" type="Label" parent="RoomDetails/User"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "USERNAME"
+vertical_alignment = 1
+
+[node name="OnlineStatus" type="ColorRect" parent="RoomDetails/User"]
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_right = -8.0
+grow_horizontal = 0
+grow_vertical = 2
+color = Color(0.377919, 0.377919, 0.377919, 1)
+
+[node name="Button" type="Button" parent="RoomDetails/User"]
+z_index = -2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
 [node name="RoomExample" type="Control" parent="."]
 visible = false
 custom_minimum_size = Vector2(0, 64)
@@ -212,4 +220,18 @@ grow_horizontal = 2
 grow_vertical = 2
 focus_mode = 0
 
+[node name="Refresh" type="Button" parent="."]
+custom_minimum_size = Vector2(160, 64)
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = -88.0
+offset_bottom = -88.0
+text = "Refresh Rooms"
+
 [connection signal="pressed" from="RoomInitiate" to="." method="initiate_room"]
+[connection signal="text_changed" from="RoomDetails/LineEdit" to="RoomDetails" method="modify_layout"]
+[connection signal="pressed" from="RoomDetails/change_permission" to="RoomDetails" method="request_permission"]
+[connection signal="pressed" from="Refresh" to="." method="refresh_rooms"]
