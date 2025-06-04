@@ -78,7 +78,6 @@ func _process(_delta):
 	if udp_peer.get_available_packet_count() > 0:
 		var array_bytes = udp_peer.get_packet()
 		var packet_string = array_bytes.get_string_from_ascii()
-		print("Received message: ", packet_string)
 		move_received.emit(packet_string)
 	
 	socket.poll()

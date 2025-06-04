@@ -86,6 +86,99 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="ScrollContainer" type="ScrollContainer" parent="RoomDetails"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_right = -4.0
+offset_bottom = -128.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="RoomDetails/ScrollContainer"]
+layout_mode = 2
+
+[node name="User" type="Control" parent="RoomDetails/ScrollContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+
+[node name="Username" type="Label" parent="RoomDetails/ScrollContainer/VBoxContainer/User"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "USERNAME"
+vertical_alignment = 1
+
+[node name="OnlineStatus" type="ColorRect" parent="RoomDetails/ScrollContainer/VBoxContainer/User"]
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_right = -8.0
+grow_horizontal = 0
+grow_vertical = 2
+color = Color(0.377919, 0.377919, 0.377919, 1)
+
+[node name="Button" type="Button" parent="RoomDetails/ScrollContainer/VBoxContainer/User"]
+z_index = -2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="LineEdit" type="LineEdit" parent="RoomDetails"]
+custom_minimum_size = Vector2(0, 54)
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = -128.0
+offset_right = -4.0
+offset_bottom = -128.0
+grow_horizontal = 2
+
+[node name="change_permission" type="Button" parent="RoomDetails"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_right = -74.0
+offset_bottom = -6.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "ADD USER"
+
+[node name="change_owner" type="Button" parent="RoomDetails"]
+custom_minimum_size = Vector2(56, 64)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -4.0
+offset_bottom = -6.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "MAKE
+OWNER"
+
 [node name="RoomExample" type="Control" parent="."]
 visible = false
 custom_minimum_size = Vector2(0, 64)
