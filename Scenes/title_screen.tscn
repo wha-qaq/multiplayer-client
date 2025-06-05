@@ -152,12 +152,12 @@ metadata/_edit_use_anchors_ = true
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.0231481
-anchor_top = 0.305761
+anchor_top = 0.502572
 anchor_right = 0.976563
-anchor_bottom = 0.47037
+anchor_bottom = 0.667181
 tooltip_text = "The name that will be used to log into the website"
 theme = ExtResource("1_ak2if")
-placeholder_text = "Password"
+placeholder_text = "Confirm Password"
 metadata/_edit_use_anchors_ = true
 
 [node name="ConfirmSignUp" type="Button" parent="AuthPanel/SignUp"]

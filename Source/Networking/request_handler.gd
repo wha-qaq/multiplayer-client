@@ -4,10 +4,10 @@ extends HTTPRequest
 signal request_parsed
 signal activated(bool)
 
-func open_request_auth(url : String, custom_headers : PackedStringArray = PackedStringArray([]), method : HTTPClient.Method = HTTPClient.METHOD_GET, request_body : String = "") -> Error:
+func open_request_auth(url : String, custom_headers : PackedStringArray = PackedStringArray([]), method : HTTPClient.Method = HTTPClient.METHOD_GET, request_data : String = ""):
 	var headers = custom_headers.duplicate()
 	headers.append(PlayerAuth.get_auth_token())
-	return open_request(url, headers, method, request_body)
+	return open_request(url, headers, method, request_data)
 
 func open_request(url : String, custom_headers : PackedStringArray = PackedStringArray([]), method : HTTPClient.Method = HTTPClient.METHOD_GET, request_data : String = ""):
 	if get_http_client_status() != HTTPClient.STATUS_DISCONNECTED:
@@ -15,6 +15,22 @@ func open_request(url : String, custom_headers : PackedStringArray = PackedStrin
 		return ERR_ALREADY_IN_USE
 	activated.emit(true)
 	return request(url, custom_headers, method, request_data)
+
+func request_block(url : String, custom_headers : PackedStringArray = PackedStringArray([]), method : HTTPClient.Method = HTTPClient.METHOD_GET, request_data : String = ""):
+	var requesting = open_request(url, custom_headers, method, request_data)
+	if requesting != OK:
+		return
+	
+	var response = await request_parsed
+	return response
+
+func request_block_auth(url : String, custom_headers : PackedStringArray = PackedStringArray([]), method : HTTPClient.Method = HTTPClient.METHOD_GET, request_data : String = ""):
+	var requesting = open_request_auth(url, custom_headers, method, request_data)
+	if requesting != OK:
+		return
+	
+	var response = await request_parsed
+	return response
 
 func parse_request(result : HTTPRequest.Result, response_code : int, _headers : PackedStringArray, body : PackedByteArray) -> Variant:
 	activated.emit(false)

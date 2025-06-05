@@ -13,7 +13,7 @@ const ROOM_PERM = DOMAIN + "/rooms?room_id=%s&allow=%s"
 @onready var room_container = $Rooms/Scrolling/Margin/Container
 
 @onready var room_request : RequestHandler = RequestHandler.new()
-@onready var room_create : RequestHandler = RequestHandler.new()
+@onready var room_open : RequestHandler = RequestHandler.new()
 @onready var room_get : RequestHandler = RequestHandler.new()
 @onready var room_post : RequestHandler = RequestHandler.new()
 
@@ -79,10 +79,16 @@ func request_rooms():
 	return room_request.open_request_auth(ROOM_ACCESS)
 
 func request_create_room():
-	return room_create.open_request_auth(ROOM_CREATE, [], HTTPClient.METHOD_PUT)
+	var response = await room_open.request_block_auth(ROOM_CREATE, [], HTTPClient.METHOD_PUT)
+	if not response:
+		return
+	reflect_added(response)
 
 func request_get_room(room_id):
-	return room_get.open_request_auth(ROOM_GET % room_id, [], HTTPClient.METHOD_GET)
+	var response = await room_open.request_block_auth(ROOM_GET % room_id, [], HTTPClient.METHOD_GET)
+	if not response:
+		return
+	display_room(response)
 
 func request_modify_permission(username : String, new_permission : bool):
 	if selected_room < 0:
@@ -105,16 +111,10 @@ func _ready() -> void:
 	room_request.request_parsed.connect(populate_rooms)
 	add_child(room_request)
 	
-	room_create.timeout = 3
-	room_create.request_parsed.connect(reflect_added)
-	add_child(room_create)
-	
-	room_get.timeout = 3
-	room_get.request_parsed.connect(display_room)
-	add_child(room_get)
+	room_open.timeout = 3
+	add_child(room_open)
 	
 	room_post.timeout = 3
-	room_post.request_parsed.connect(permission_changed)
 	add_child(room_post)
 	
 	RoomConnector.on_connection.connect(initiate_join_room)
@@ -128,6 +128,7 @@ func _ready() -> void:
 func refresh_rooms():
 	room_details.clear_details()
 	selected_room = -1
+	room_initiate.text = "Create Room"
 	request_rooms()
 
 func initiate_room() -> void:
