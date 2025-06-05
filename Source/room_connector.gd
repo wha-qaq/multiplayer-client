@@ -52,10 +52,14 @@ func send_message(message : String) -> bool:
 
 func move_character(new_pos : Vector2) -> bool:
 	udp_peer.put_packet(("%s,%s" % [new_pos.x, new_pos.y]).to_utf8_buffer())
-	#if socket.get_ready_state() != WebSocketPeer.STATE_OPEN:
-		#return false
-	#
-	#socket.send_text(MOVE_FORMAT % [new_pos.x, new_pos.y])
+	
+	return true
+
+func exit_room():
+	if socket.get_ready_state() != WebSocketPeer.STATE_OPEN:
+		return false
+	
+	socket.close()
 	return true
 
 func request_joined() -> bool:
@@ -69,10 +73,8 @@ func _ready():
 	udp_peer.set_dest_address(HOST, PORT)
 	
 	set_process(false)
-	on_connection.connect(func(con : WebSocketPeer):
-		print("Connected!")
-		await get_tree().create_timer(1).timeout
-		con.send_text("hello"))
+	on_connection.connect(func(_con : WebSocketPeer):
+		print("Connected!"))
 
 func _process(_delta):
 	if udp_peer.get_available_packet_count() > 0:

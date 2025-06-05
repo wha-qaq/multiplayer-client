@@ -13,6 +13,3 @@ func flush_messages():
 	var dup = messages.duplicate()
 	messages.clear()
 	return dup
-
-func _ready():
-	on_message.connect(print)

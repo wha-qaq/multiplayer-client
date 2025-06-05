@@ -102,3 +102,6 @@ func _process(_delta: float) -> void:
 
 func _send_message(new_text: String) -> void:
 	RoomConnector.send_message(new_text)
+
+func _exit_room():
+	RoomConnector.exit_room()

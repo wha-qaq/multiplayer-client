@@ -29,6 +29,7 @@ texture = ExtResource("2_2euvg")
 shape = SubResource("CircleShape2D_d08tv")
 
 [node name="Camera2D" type="Camera2D" parent="MainCharacter"]
+process_callback = 0
 position_smoothing_enabled = true
 
 [node name="GUI" type="CanvasLayer" parent="."]
@@ -56,6 +57,17 @@ grow_horizontal = 2
 grow_vertical = 0
 metadata/_edit_use_anchors_ = true
 
+[node name="Leave" type="Button" parent="GUI"]
+custom_minimum_size = Vector2(64, 64)
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_top = 16.0
+offset_right = -16.0
+grow_horizontal = 0
+text = "Leave"
+metadata/_edit_use_anchors_ = true
+
 [node name="CharacterReplicator" type="Node2D" parent="."]
 y_sort_enabled = true
 script = ExtResource("4_giuuk")
@@ -67,3 +79,4 @@ position = Vector2(225, 98)
 texture = ExtResource("2_2euvg")
 
 [connection signal="text_submitted" from="GUI/Main/MessageBox" to="." method="_send_message"]
+[connection signal="pressed" from="GUI/Leave" to="." method="_exit_room"]

@@ -2,6 +2,8 @@ extends Node2D
 
 const base_message = preload("res://Scenes/Objects/message.tscn")
 
+const INTERPOLATION_TIME = 0.15
+
 func _ready():
 	$BaseReplication.hide()
 
@@ -34,7 +36,14 @@ func move_character(uid : int, character_position : Vector2):
 	if not character:
 		return
 	
-	character.global_position = character_position
+	var interpolation_time = 0
+	if character.has_meta("tween"):
+		character.get_meta("tween").kill()
+		interpolation_time = INTERPOLATION_TIME
+	
+	var tween = character.create_tween()
+	tween.tween_property(character, "global_position", character_position, interpolation_time)
+	character.set_meta("tween", tween)
 
 func del_character(uid):
 	var character = find_character(uid)
