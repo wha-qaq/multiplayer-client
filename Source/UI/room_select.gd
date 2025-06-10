@@ -17,6 +17,9 @@ const ROOM_PERM = DOMAIN + "/rooms?room_id=%s&allow=%s"
 @onready var room_get : RequestHandler = RequestHandler.new()
 @onready var room_post : RequestHandler = RequestHandler.new()
 
+@onready var notifications = $Notifications/Container
+@onready var notif = $Notifications/Label
+
 var selected_room : int = -1
 
 func change_selection(new_room : int):
@@ -106,6 +109,21 @@ func request_join_room(room_id : int):
 func initiate_join_room(_socket : WebSocketPeer):
 	get_tree().change_scene_to_file("res://Scenes/main_room.tscn")
 
+func show_message(text : String):
+	var clone = notif.duplicate()
+	clone.text = text
+	notifications.add_child(clone)
+	notifications.move_child(clone, 0)
+	
+	var tween = clone.create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_QUINT)
+	clone.modulate.a = 0
+	clone.show()
+	
+	tween.tween_property(clone, "modulate:a", 1, 0.8).from(0).set_ease(Tween.EASE_OUT)
+	tween.tween_interval(1 + minf(len(text) * 0.025, 3.5))
+	tween.tween_property(clone, "modulate:a", 0, 0.8).from(1)
+	tween.tween_callback(clone.queue_free)
+
 func _ready() -> void:
 	room_request.timeout = 3
 	room_request.request_parsed.connect(populate_rooms)
@@ -124,6 +142,11 @@ func _ready() -> void:
 	await get_tree().process_frame
 	
 	request_rooms()
+	
+	var found = MessagingSystem.flush_messages()
+	for message in found:
+		show_message(found)
+	MessagingSystem.on_message.connect(show_message)
 
 func refresh_rooms():
 	room_details.clear_details()
