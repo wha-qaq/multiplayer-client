@@ -1,14 +1,31 @@
-[gd_scene load_steps=7 format=3 uid="uid://nuqm4wty6am1"]
+[gd_scene load_steps=9 format=3 uid="uid://nuqm4wty6am1"]
 
 [ext_resource type="Script" uid="uid://b8wl1pqpavw0t" path="res://Source/main_room.gd" id="1_b2wh1"]
 [ext_resource type="Script" uid="uid://d3jt8ayf2tkmm" path="res://Source/character.gd" id="1_kc0wd"]
 [ext_resource type="Texture2D" uid="uid://bbrfvri48mwbc" path="res://icon.svg" id="2_2euvg"]
 [ext_resource type="Script" uid="uid://2kwfykyajhc4" path="res://Source/character_replicator.gd" id="4_giuuk"]
+[ext_resource type="Script" uid="uid://dsubxwln41vby" path="res://Source/UI/message_logs.gd" id="4_lylwp"]
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_kmhja"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_d08tv"]
 radius = 64.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_giuuk"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0, 0, 0, 0.392157)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 0.588235)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
 
 [node name="MainRoom" type="Node2D"]
 y_sort_enabled = true
@@ -68,6 +85,103 @@ grow_horizontal = 0
 text = "Leave"
 metadata/_edit_use_anchors_ = true
 
+[node name="OpenLogs" type="Button" parent="GUI"]
+custom_minimum_size = Vector2(96, 64)
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -154.0
+offset_top = 16.0
+offset_right = -90.0
+offset_bottom = 80.0
+grow_horizontal = 0
+text = "Logs"
+metadata/_edit_use_anchors_ = true
+
+[node name="MessageLogs" type="Control" parent="GUI"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("4_lylwp")
+
+[node name="Refresh" type="Button" parent="GUI/MessageLogs"]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.8
+anchor_top = 1.0
+anchor_right = 0.8
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_bottom = -18.0
+grow_vertical = 0
+text = "Refresh
+Messages"
+
+[node name="Panel" type="PanelContainer" parent="GUI/MessageLogs"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.2
+anchor_right = 0.8
+anchor_bottom = 1.0
+offset_top = 16.0
+offset_bottom = -16.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_giuuk")
+
+[node name="Scroll" type="ScrollContainer" parent="GUI/MessageLogs/Panel"]
+layout_mode = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="Vertical" type="VBoxContainer" parent="GUI/MessageLogs/Panel/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="User" type="Control" parent="GUI/MessageLogs"]
+visible = false
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+anchors_preset = 0
+offset_left = 238.4
+offset_top = 24.0
+offset_right = 913.4
+offset_bottom = 56.0
+
+[node name="Label" type="Label" parent="GUI/MessageLogs/User"]
+layout_mode = 2
+offset_left = 8.0
+offset_top = 2.0
+offset_right = 667.0
+offset_bottom = 30.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 20
+text = "Username"
+
+[node name="Message" type="Control" parent="GUI/MessageLogs"]
+visible = false
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+anchors_preset = 0
+offset_left = 238.4
+offset_top = 24.0
+offset_right = 913.4
+offset_bottom = 88.0
+
+[node name="Label" type="Label" parent="GUI/MessageLogs/Message"]
+layout_mode = 2
+offset_left = 8.0
+offset_right = 667.0
+offset_bottom = 64.0
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 14
+text = "Example message"
+
 [node name="CharacterReplicator" type="Node2D" parent="."]
 y_sort_enabled = true
 script = ExtResource("4_giuuk")
@@ -80,3 +194,5 @@ texture = ExtResource("2_2euvg")
 
 [connection signal="text_submitted" from="GUI/Main/MessageBox" to="." method="_send_message"]
 [connection signal="pressed" from="GUI/Leave" to="." method="_exit_room"]
+[connection signal="pressed" from="GUI/OpenLogs" to="." method="_show_logs"]
+[connection signal="pressed" from="GUI/MessageLogs/Refresh" to="GUI/MessageLogs" method="_refresh_messages"]

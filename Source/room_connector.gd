@@ -2,10 +2,14 @@ extends Node
 
 const LOCAL_HOST = "127.0.0.1"
 
+const DOMAIN = "http://127.0.0.1:5000"
 const DOMAIN_WS = "ws://127.0.0.1:5000"
+
 const HOST = "127.0.0.1"
 const PORT = 5000
+
 const JOIN_ROOM = DOMAIN_WS + "/join?room_id=%s"
+const GET_ROOM = DOMAIN_WS + "/room?room_id=%s"
 
 const MESSAGE_FORMAT = "m%s"
 const MOVE_FORMAT = "/%s,%s"
@@ -17,11 +21,20 @@ signal move_received(String)
 @onready var socket = WebSocketPeer.new()
 var prev_state : int = -1
 var udp_peer = PacketPeerUDP.new()
+var room_get_request = RequestHandler.new()
+
+var active_room = -1
+var active_characters : Array = []
+var active_messages : Array = []
 
 func is_room_connected() -> bool:
 	return socket.get_ready_state() == WebSocketPeer.STATE_OPEN
 
-func join_room(room_id : int) -> bool:
+func join_room() -> bool:
+	if active_room < 0:
+		print("No room selected")
+		return false
+	
 	if socket.get_ready_state() != WebSocketPeer.STATE_CLOSED:
 		print("Already connecting")
 		return false
@@ -38,7 +51,7 @@ func join_room(room_id : int) -> bool:
 		port = port + 1
 		
 	socket.handshake_headers = [PlayerAuth.get_auth_token(), "port:%s" % port]
-	socket.connect_to_url(JOIN_ROOM % room_id)
+	socket.connect_to_url(JOIN_ROOM % active_room)
 	print("Trying to connect")
 	set_process(true)
 	return true
@@ -99,3 +112,16 @@ func _process(_delta):
 		print("WebSocket closed with code: %d, reason %s. Clean: %s" % [code, reason, code != -1])
 		set_process(false)
 		udp_peer.close()
+
+func prepare_room(room_id : int, characters : Array, messages : Array):
+	active_room = room_id
+	active_characters = characters
+	active_messages = messages
+
+func deselect_room():
+	active_room = -1
+	active_characters = []
+	active_messages = []
+
+func reload_messages():
+	await room_get_request.request_block_auth(GET_ROOM % [active_room], [], HTTPClient.METHOD_GET)

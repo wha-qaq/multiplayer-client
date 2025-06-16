@@ -7,7 +7,6 @@ signal change_permission(user : String, new_permission : bool)
 
 @onready var username_input = $LineEdit
 @onready var change_perms = $change_permission
-@onready var change_owner = $change_owner
 
 var permission_change : bool = true
 
@@ -26,11 +25,9 @@ func modify_layout(text : String):
 	var user = find_node_of(text)
 	if not user:
 		change_perms.text = "ADD USER"
-		change_owner.disabled = true
 		permission_change = true
 		return
 	change_perms.text = "REMOVE USER"
-	change_owner.disabled = false
 	permission_change = false
 
 func highlight_user(username : String):
@@ -92,6 +89,10 @@ func populate_details(details : Dictionary):
 		var username = character.get("username", "unnamed")
 		var display_name = ("%s@%s" % [character_name, username]) if character_name else username
 		add_user(display_name, username)
+	
+	var messages = details.get("messages")
+	if not (characters is Array):
+		return
 
 func request_permission():
 	var username = username_input.text

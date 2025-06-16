@@ -68,15 +68,19 @@ func reflect_added(response):
 		return
 	
 	create_room_button(room_name, id)
-	return
 
-func display_room(response):
+func display_room(room_id, response):
 	room_details.populate_details(response)
-	return
+	
+	var characters = response.get("characters")
+	var messages = response.get("messages")
+	
+	if not (characters is Array) or not (messages is Array):
+		return
+	RoomConnector.prepare_room(room_id, characters, messages)
 
 func permission_changed(response):
 	room_details.reflect_change(response)
-	return
 
 func request_rooms():
 	return room_request.open_request_auth(ROOM_ACCESS)
@@ -91,7 +95,7 @@ func request_get_room(room_id):
 	var response = await room_open.request_block_auth(ROOM_GET % room_id, [], HTTPClient.METHOD_GET)
 	if not response:
 		return
-	display_room(response)
+	display_room(room_id, response)
 
 func request_modify_permission(username : String, new_permission : bool):
 	if selected_room < 0:
@@ -102,9 +106,6 @@ func request_modify_permission(username : String, new_permission : bool):
 	var headers = ["Content-Type: application/json"]
 	var body = JSON.stringify([username])
 	return room_post.open_request_auth(req, headers, HTTPClient.METHOD_POST, body)
-
-func request_join_room(room_id : int):
-	RoomConnector.join_room(room_id)
 
 func initiate_join_room(_socket : WebSocketPeer):
 	get_tree().change_scene_to_file("res://Scenes/main_room.tscn")
@@ -150,13 +151,9 @@ func _ready() -> void:
 
 func refresh_rooms():
 	room_details.clear_details()
-	selected_room = -1
+	RoomConnector.deselect_room()
 	room_initiate.text = "Create Room"
 	request_rooms()
 
 func initiate_room() -> void:
-	if selected_room < 0:
-		request_create_room()
-		return
-	
-	request_join_room(selected_room)
+	RoomConnector.join_room()

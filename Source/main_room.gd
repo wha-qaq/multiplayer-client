@@ -5,17 +5,20 @@ const base_message = preload("res://Scenes/Objects/message.tscn")
 var change_pattern = RegEx.create_from_string("^(\\d+)([/jml])(.*)$")
 @onready var main_character = $MainCharacter
 
+@onready var character_replicator = $CharacterReplicator
+@onready var message_logs = $GUI/MessageLogs
+
 func join_character(uid : int, char_position : Vector2):
 	if PlayerAuth.get_uid() == uid:
 		return
 	
-	$CharacterReplicator.spawn_character(uid, char_position)
+	character_replicator.spawn_character(uid, char_position)
 
 func leave_character(uid : int):
 	if PlayerAuth.get_uid() == uid:
 		return
 	
-	$CharacterReplicator.del_character(uid)
+	character_replicator.del_character(uid)
 
 func say_message(uid : int, str_message : String):
 	if PlayerAuth.get_uid() == uid:
@@ -24,13 +27,13 @@ func say_message(uid : int, str_message : String):
 		main_character.add_child(message)
 		return
 	
-	$CharacterReplicator.say_character(uid, str_message)
+	character_replicator.say_character(uid, str_message)
 
 func move_character(uid : int, character_position : Vector2):
 	if PlayerAuth.get_uid() == uid:
 		return
 	
-	$CharacterReplicator.move_character(uid, character_position)
+	character_replicator.move_character(uid, character_position)
 
 func handle_change(full_change : String):
 	var result = change_pattern.search(full_change)
@@ -105,3 +108,6 @@ func _send_message(new_text: String) -> void:
 
 func _exit_room():
 	RoomConnector.exit_room()
+
+func _show_logs() -> void:
+	message_logs.visible = !message_logs.visible
