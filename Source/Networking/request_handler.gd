@@ -46,6 +46,14 @@ func parse_request(result : HTTPRequest.Result, response_code : int, _headers : 
 	var json = JSON.new()
 	var err = json.parse(body.get_string_from_utf8())
 	if err:
+		if response_code == HTTPClient.RESPONSE_NOT_FOUND:
+			MessagingSystem.add_message("Action could not occur")
+			return
+		
+		if response_code != HTTPClient.RESPONSE_OK:
+			MessagingSystem.add_message("Could not interpret response, error code: " + str(response_code))
+			return
+		
 		MessagingSystem.add_message("Could not interpret server's response, your app may be outdated")
 		return
 	

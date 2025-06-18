@@ -17,9 +17,6 @@ const ROOM_PERM = DOMAIN + "/rooms?room_id=%s&allow=%s"
 @onready var room_get : RequestHandler = RequestHandler.new()
 @onready var room_post : RequestHandler = RequestHandler.new()
 
-@onready var notifications = $Notifications/Container
-@onready var notif = $Notifications/Label
-
 var selected_room : int = -1
 
 func change_selection(new_room : int):
@@ -69,16 +66,6 @@ func reflect_added(response):
 	
 	create_room_button(room_name, id)
 
-func display_room(room_id, response):
-	room_details.populate_details(response)
-	
-	var characters = response.get("characters")
-	var messages = response.get("messages")
-	
-	if not (characters is Array) or not (messages is Array):
-		return
-	RoomConnector.prepare_room(room_id, characters, messages)
-
 func permission_changed(response):
 	room_details.reflect_change(response)
 
@@ -95,7 +82,8 @@ func request_get_room(room_id):
 	var response = await room_open.request_block_auth(ROOM_GET % room_id, [], HTTPClient.METHOD_GET)
 	if not response:
 		return
-	display_room(room_id, response)
+	room_details.populate_details(response)
+	RoomConnector.prepare_room_by_response(room_id, response)
 
 func request_modify_permission(username : String, new_permission : bool):
 	if selected_room < 0:
@@ -110,30 +98,15 @@ func request_modify_permission(username : String, new_permission : bool):
 func initiate_join_room(_socket : WebSocketPeer):
 	get_tree().change_scene_to_file("res://Scenes/main_room.tscn")
 
-func show_message(text : String):
-	var clone = notif.duplicate()
-	clone.text = text
-	notifications.add_child(clone)
-	notifications.move_child(clone, 0)
-	
-	var tween = clone.create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_QUINT)
-	clone.modulate.a = 0
-	clone.show()
-	
-	tween.tween_property(clone, "modulate:a", 1, 0.8).from(0).set_ease(Tween.EASE_OUT)
-	tween.tween_interval(1 + minf(len(text) * 0.025, 3.5))
-	tween.tween_property(clone, "modulate:a", 0, 0.8).from(1)
-	tween.tween_callback(clone.queue_free)
-
 func _ready() -> void:
-	room_request.timeout = 3
+	room_request.timeout = 6
 	room_request.request_parsed.connect(populate_rooms)
 	add_child(room_request)
 	
-	room_open.timeout = 3
+	room_open.timeout = 6
 	add_child(room_open)
 	
-	room_post.timeout = 3
+	room_post.timeout = 6
 	add_child(room_post)
 	
 	RoomConnector.on_connection.connect(initiate_join_room)
@@ -143,11 +116,6 @@ func _ready() -> void:
 	await get_tree().process_frame
 	
 	request_rooms()
-	
-	var found = MessagingSystem.flush_messages()
-	for message in found:
-		show_message(found)
-	MessagingSystem.on_message.connect(show_message)
 
 func refresh_rooms():
 	room_details.clear_details()

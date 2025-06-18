@@ -9,7 +9,7 @@ const HOST = "127.0.0.1"
 const PORT = 5000
 
 const JOIN_ROOM = DOMAIN_WS + "/join?room_id=%s"
-const GET_ROOM = DOMAIN_WS + "/room?room_id=%s"
+const GET_ROOM = DOMAIN + "/rooms?room_id=%s"
 
 const MESSAGE_FORMAT = "m%s"
 const MOVE_FORMAT = "/%s,%s"
@@ -85,6 +85,8 @@ func request_joined() -> bool:
 func _ready():
 	udp_peer.set_dest_address(HOST, PORT)
 	
+	add_child(room_get_request)
+	
 	set_process(false)
 	on_connection.connect(func(_con : WebSocketPeer):
 		print("Connected!"))
@@ -123,5 +125,14 @@ func deselect_room():
 	active_characters = []
 	active_messages = []
 
+func prepare_room_by_response(room_id, response):
+	var characters = response.get("characters")
+	var messages = response.get("messages")
+	
+	if not (characters is Array) or not (messages is Array):
+		return
+	prepare_room(room_id, characters, messages)
+
 func reload_messages():
-	await room_get_request.request_block_auth(GET_ROOM % [active_room], [], HTTPClient.METHOD_GET)
+	var room_response = await room_get_request.request_block_auth(GET_ROOM % [active_room], [], HTTPClient.METHOD_GET)
+	prepare_room_by_response(active_room, room_response)

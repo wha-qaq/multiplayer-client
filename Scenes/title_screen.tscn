@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://c1c8ks4aii8ip"]
+[gd_scene load_steps=5 format=3 uid="uid://c1c8ks4aii8ip"]
 
 [ext_resource type="Theme" uid="uid://dyhjmh1vxjsi1" path="res://Content/main_theme.tres" id="1_ak2if"]
 [ext_resource type="Script" uid="uid://dmb03w2aph6v0" path="res://Source/UI/title_screen.gd" id="1_v6p8y"]
+[ext_resource type="PackedScene" uid="uid://bwmfa211x63wn" path="res://Scenes/Objects/notifications.tscn" id="3_4gxqj"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_v6p8y"]
 font_size = 78
@@ -86,6 +87,7 @@ anchor_bottom = 0.47037
 tooltip_text = "The name that will be used to log into the website"
 theme = ExtResource("1_ak2if")
 placeholder_text = "Password"
+secret = true
 metadata/_edit_use_anchors_ = true
 
 [node name="ConfirmSignIn" type="Button" parent="AuthPanel/SignIn"]
@@ -146,6 +148,7 @@ anchor_bottom = 0.47037
 tooltip_text = "The name that will be used to log into the website"
 theme = ExtResource("1_ak2if")
 placeholder_text = "Password"
+secret = true
 metadata/_edit_use_anchors_ = true
 
 [node name="PasswordConfirm" type="LineEdit" parent="AuthPanel/SignUp"]
@@ -158,6 +161,7 @@ anchor_bottom = 0.667181
 tooltip_text = "The name that will be used to log into the website"
 theme = ExtResource("1_ak2if")
 placeholder_text = "Confirm Password"
+secret = true
 metadata/_edit_use_anchors_ = true
 
 [node name="ConfirmSignUp" type="Button" parent="AuthPanel/SignUp"]
@@ -207,51 +211,8 @@ grow_vertical = 2
 mouse_filter = 2
 theme = ExtResource("1_ak2if")
 
-[node name="Notifications" type="Control" parent="."]
+[node name="Notifications" parent="." instance=ExtResource("3_4gxqj")]
 layout_mode = 1
-anchor_left = 0.2
-anchor_right = 0.8
-anchor_bottom = 2.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-
-[node name="Label" type="Label" parent="Notifications"]
-visible = false
-layout_mode = 2
-offset_top = 24.0
-offset_right = 691.0
-offset_bottom = 73.0
-grow_horizontal = 2
-text = "Message
-test"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Panel" type="Panel" parent="Notifications/Label"]
-show_behind_parent = true
-layout_mode = 1
-anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -4.0
-offset_top = -10.0
-offset_right = 4.0
-offset_bottom = 10.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-
-[node name="Container" type="VBoxContainer" parent="Notifications"]
-layout_mode = 1
-anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = 24.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_override_constants/separation = 32
 
 [connection signal="pressed" from="PlayButton" to="." method="start_playing"]
 [connection signal="text_submitted" from="AuthPanel/SignIn/Username" to="." method="start_sign_in"]

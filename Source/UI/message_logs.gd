@@ -7,6 +7,9 @@ extends Control
 
 func display_messages():
 	var current_id = -1
+	for child in message_log.get_children():
+		child.queue_free()
+	
 	for message_details in RoomConnector.active_messages:
 		var c_id = message_details.get("character_id", 0) as int
 		if not c_id:

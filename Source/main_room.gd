@@ -111,3 +111,7 @@ func _exit_room():
 
 func _show_logs() -> void:
 	message_logs.visible = !message_logs.visible
+
+
+func _on_button_pressed() -> void:
+	MessagingSystem.add_message("test message")

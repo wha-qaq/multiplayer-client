@@ -1,0 +1,52 @@
+[gd_scene load_steps=2 format=3 uid="uid://bwmfa211x63wn"]
+
+[ext_resource type="Script" uid="uid://76hc2pr3kxdp" path="res://Source/UI/system_messages.gd" id="1_rui6s"]
+
+[node name="Notifications" type="Control"]
+z_index = 10
+layout_mode = 3
+anchor_left = 0.2
+anchor_right = 0.8
+anchor_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_rui6s")
+
+[node name="Label" type="Label" parent="."]
+visible = false
+z_index = 3
+layout_mode = 2
+offset_right = 691.0
+offset_bottom = 49.0
+grow_horizontal = 2
+size_flags_vertical = 1
+text = "Message
+test"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="Panel" type="Panel" parent="Label"]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -4.0
+offset_top = -10.0
+offset_right = 4.0
+offset_bottom = 10.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Container" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 32

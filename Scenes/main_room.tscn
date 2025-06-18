@@ -1,10 +1,11 @@
-[gd_scene load_steps=9 format=3 uid="uid://nuqm4wty6am1"]
+[gd_scene load_steps=10 format=3 uid="uid://nuqm4wty6am1"]
 
 [ext_resource type="Script" uid="uid://b8wl1pqpavw0t" path="res://Source/main_room.gd" id="1_b2wh1"]
 [ext_resource type="Script" uid="uid://d3jt8ayf2tkmm" path="res://Source/character.gd" id="1_kc0wd"]
 [ext_resource type="Texture2D" uid="uid://bbrfvri48mwbc" path="res://icon.svg" id="2_2euvg"]
 [ext_resource type="Script" uid="uid://2kwfykyajhc4" path="res://Source/character_replicator.gd" id="4_giuuk"]
 [ext_resource type="Script" uid="uid://dsubxwln41vby" path="res://Source/UI/message_logs.gd" id="4_lylwp"]
+[ext_resource type="PackedScene" uid="uid://bwmfa211x63wn" path="res://Scenes/Objects/notifications.tscn" id="5_8147l"]
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_kmhja"]
 
@@ -181,6 +182,13 @@ offset_bottom = 64.0
 size_flags_vertical = 1
 theme_override_font_sizes/font_size = 14
 text = "Example message"
+
+[node name="Notifications" parent="GUI" instance=ExtResource("5_8147l")]
+anchor_left = 0.7
+anchor_top = -1.15
+anchor_right = 1.0
+anchor_bottom = 0.85
+from_bottom = true
 
 [node name="CharacterReplicator" type="Node2D" parent="."]
 y_sort_enabled = true

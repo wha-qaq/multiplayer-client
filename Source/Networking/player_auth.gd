@@ -49,6 +49,6 @@ func _token_recieved(response : Variant):
 	save_auth(response["token"], response["uid"])
 
 func _ready() -> void:
-	request.timeout = 3
+	request.timeout = 6
 	request.request_parsed.connect(_token_recieved)
 	add_child(request)

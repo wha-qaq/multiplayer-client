@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://bgwjwdg5fu2qs"]
+[gd_scene load_steps=6 format=3 uid="uid://bgwjwdg5fu2qs"]
 
 [ext_resource type="Script" uid="uid://cp60kidq0vyyw" path="res://Source/UI/room_select.gd" id="1_0dhwt"]
 [ext_resource type="Theme" uid="uid://dyhjmh1vxjsi1" path="res://Content/main_theme.tres" id="2_4ihgt"]
 [ext_resource type="Script" uid="uid://bbea5oqu0kmmo" path="res://Source/UI/room_details.gd" id="3_k65m4"]
 [ext_resource type="Script" uid="uid://4pb87lbmwj85" path="res://Source/UI/room_selection.gd" id="3_tff5n"]
+[ext_resource type="PackedScene" uid="uid://bwmfa211x63wn" path="res://Scenes/Objects/notifications.tscn" id="5_o62ik"]
 
 [node name="RoomSelect" type="Control"]
 layout_mode = 3
@@ -215,53 +216,8 @@ offset_top = -88.0
 offset_bottom = -88.0
 text = "Refresh Rooms"
 
-[node name="Notifications" type="Control" parent="."]
-z_index = 10
+[node name="Notifications" parent="." instance=ExtResource("5_o62ik")]
 layout_mode = 1
-anchor_left = 0.2
-anchor_right = 0.8
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-
-[node name="Label" type="Label" parent="Notifications"]
-visible = false
-z_index = 3
-layout_mode = 2
-offset_top = 24.0
-offset_right = 691.0
-offset_bottom = 73.0
-grow_horizontal = 2
-text = "Message
-test"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Panel" type="Panel" parent="Notifications/Label"]
-show_behind_parent = true
-layout_mode = 1
-anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -4.0
-offset_top = -10.0
-offset_right = 4.0
-offset_bottom = 10.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-
-[node name="Container" type="VBoxContainer" parent="Notifications"]
-layout_mode = 1
-anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 2.0
-offset_top = 24.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_override_constants/separation = 32
 
 [connection signal="pressed" from="RoomInitiate" to="." method="initiate_room"]
 [connection signal="text_changed" from="RoomDetails/LineEdit" to="RoomDetails" method="modify_layout"]
