@@ -124,7 +124,7 @@ func refresh_rooms():
 	request_rooms()
 
 func initiate_room() -> void:
-	if selected_room:
+	if selected_room > 0:
 		RoomConnector.join_room()
 		return
 	

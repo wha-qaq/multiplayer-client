@@ -21,6 +21,8 @@ func leave_character(uid : int):
 	character_replicator.del_character(uid)
 
 func say_message(uid : int, str_message : String):
+	
+	message_logs.log_message(uid, str_message)
 	if PlayerAuth.get_uid() == uid:
 		var message = base_message.instantiate()
 		message.say(str_message)
@@ -49,7 +51,6 @@ func handle_change(full_change : String):
 	var uid = int(uid_string)
 	var change = result.get_string(2)
 	var data = result.get_string(3)
-	#print(PlayerAuth.get_uid(), ": ", uid, ", ", change, ", ", data)
 	
 	if change == "j":
 		var char_position = data.split(",", true, 1)
@@ -113,5 +114,5 @@ func _exit_room():
 func _show_logs() -> void:
 	message_logs.visible = !message_logs.visible
 
-func _toggle_user_movement(enable : bool) -> void:
-	main_character.can_move = enable
+func _toggle_user_movement(disable : bool) -> void:
+	main_character.can_move = not disable
