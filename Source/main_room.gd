@@ -105,6 +105,7 @@ func _process(_delta: float) -> void:
 
 func _send_message(new_text: String) -> void:
 	RoomConnector.send_message(new_text)
+	# TODO: Deselection on enter
 
 func _exit_room():
 	RoomConnector.exit_room()
@@ -112,6 +113,5 @@ func _exit_room():
 func _show_logs() -> void:
 	message_logs.visible = !message_logs.visible
 
-
-func _on_button_pressed() -> void:
-	MessagingSystem.add_message("test message")
+func _toggle_user_movement(enable : bool) -> void:
+	main_character.can_move = enable

@@ -26,7 +26,7 @@ anchor_right = 0.5
 anchor_bottom = 0.15
 grow_horizontal = 2
 theme = ExtResource("1_ak2if")
-text = "TITLE"
+text = "App Title"
 label_settings = SubResource("LabelSettings_v6p8y")
 horizontal_alignment = 1
 metadata/_edit_use_anchors_ = true
@@ -45,6 +45,7 @@ offset_bottom = 64.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_ak2if")
+text = "PLAY"
 metadata/_edit_use_anchors_ = true
 
 [node name="AuthPanel" type="Control" parent="."]
