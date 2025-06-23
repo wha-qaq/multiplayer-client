@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://nuqm4wty6am1"]
+[gd_scene load_steps=11 format=3 uid="uid://nuqm4wty6am1"]
 
 [ext_resource type="Script" uid="uid://b8wl1pqpavw0t" path="res://Source/main_room.gd" id="1_b2wh1"]
 [ext_resource type="Script" uid="uid://d3jt8ayf2tkmm" path="res://Source/character.gd" id="1_kc0wd"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://2kwfykyajhc4" path="res://Source/character_replicator.gd" id="4_giuuk"]
 [ext_resource type="Script" uid="uid://dsubxwln41vby" path="res://Source/UI/message_logs.gd" id="4_lylwp"]
 [ext_resource type="PackedScene" uid="uid://bwmfa211x63wn" path="res://Scenes/Objects/notifications.tscn" id="5_8147l"]
+[ext_resource type="Script" uid="uid://dxbukk71miadi" path="res://Source/UI/settings_menu.gd" id="5_v1qvw"]
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_kmhja"]
 
@@ -32,7 +33,7 @@ corner_radius_bottom_left = 8
 y_sort_enabled = true
 script = ExtResource("1_b2wh1")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Background" type="Sprite2D" parent="."]
 z_index = -1
 scale = Vector2(1024, 1024)
 texture = SubResource("PlaceholderTexture2D_kmhja")
@@ -49,6 +50,32 @@ shape = SubResource("CircleShape2D_d08tv")
 [node name="Camera2D" type="Camera2D" parent="MainCharacter"]
 process_callback = 0
 position_smoothing_enabled = true
+
+[node name="Control" type="Control" parent="MainCharacter"]
+layout_mode = 3
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_right = 20.0
+offset_bottom = 100.0
+grow_horizontal = 2
+
+[node name="Label" type="Label" parent="MainCharacter/Control"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -43.5
+offset_top = -23.0
+offset_right = 43.5
+grow_horizontal = 2
+grow_vertical = 0
+text = "USERNAME"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="GUI" type="CanvasLayer" parent="."]
 
@@ -97,6 +124,19 @@ offset_right = -90.0
 offset_bottom = 80.0
 grow_horizontal = 0
 text = "Logs"
+metadata/_edit_use_anchors_ = true
+
+[node name="Settings" type="Button" parent="GUI"]
+custom_minimum_size = Vector2(96, 64)
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -294.0
+offset_top = 16.0
+offset_right = -198.0
+offset_bottom = 80.0
+grow_horizontal = 0
+text = "Settings"
 metadata/_edit_use_anchors_ = true
 
 [node name="MessageLogs" type="Control" parent="GUI"]
@@ -183,6 +223,82 @@ size_flags_vertical = 1
 theme_override_font_sizes/font_size = 14
 text = "Example message"
 
+[node name="SettingsMenu" type="Control" parent="GUI"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("5_v1qvw")
+
+[node name="Save" type="Button" parent="GUI/SettingsMenu"]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.8
+anchor_top = 1.0
+anchor_right = 0.8
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_bottom = -18.0
+grow_vertical = 0
+text = "Apply
+Changes"
+
+[node name="Panel" type="PanelContainer" parent="GUI/SettingsMenu"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.2
+anchor_right = 0.8
+anchor_bottom = 1.0
+offset_top = 16.0
+offset_bottom = -16.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_giuuk")
+
+[node name="VSplit" type="VSplitContainer" parent="GUI/SettingsMenu/Panel"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="GUI/SettingsMenu/Panel/VSplit"]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 24
+text = "Settings (Room)"
+horizontal_alignment = 1
+
+[node name="Scroll" type="ScrollContainer" parent="GUI/SettingsMenu/Panel/VSplit"]
+layout_mode = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="Vertical" type="VBoxContainer" parent="GUI/SettingsMenu/Panel/VSplit/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="DisplayName" type="PanelContainer" parent="GUI/SettingsMenu/Panel/VSplit/Scroll/Vertical"]
+layout_mode = 2
+
+[node name="HSplit" type="HSplitContainer" parent="GUI/SettingsMenu/Panel/VSplit/Scroll/Vertical/DisplayName"]
+layout_mode = 2
+split_offset = 8
+collapsed = true
+dragging_enabled = false
+dragger_visibility = 1
+
+[node name="Label" type="Label" parent="GUI/SettingsMenu/Panel/VSplit/Scroll/Vertical/DisplayName/HSplit"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Display Name"
+horizontal_alignment = 2
+
+[node name="DisplayEdit" type="LineEdit" parent="GUI/SettingsMenu/Panel/VSplit/Scroll/Vertical/DisplayName/HSplit"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+text = "Unnamed User"
+placeholder_text = "Display name cannot be empty"
+
 [node name="Notifications" parent="GUI" instance=ExtResource("5_8147l")]
 anchor_left = 0.7
 anchor_top = -1.15
@@ -200,8 +316,36 @@ position = Vector2(225, 98)
 [node name="Sprite" type="Sprite2D" parent="CharacterReplicator/BaseReplication"]
 texture = ExtResource("2_2euvg")
 
+[node name="Control" type="Control" parent="CharacterReplicator/BaseReplication"]
+layout_mode = 3
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_right = 20.0
+offset_bottom = 100.0
+grow_horizontal = 2
+
+[node name="Label" type="Label" parent="CharacterReplicator/BaseReplication/Control"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -43.5
+offset_top = -23.0
+offset_right = 43.5
+grow_horizontal = 2
+grow_vertical = 0
+text = "USERNAME"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [connection signal="editing_toggled" from="GUI/Main/MessageBox" to="." method="_toggle_user_movement"]
 [connection signal="text_submitted" from="GUI/Main/MessageBox" to="." method="_send_message"]
 [connection signal="pressed" from="GUI/Leave" to="." method="_exit_room"]
 [connection signal="pressed" from="GUI/OpenLogs" to="." method="_show_logs"]
+[connection signal="pressed" from="GUI/Settings" to="." method="_toggle_settings"]
 [connection signal="pressed" from="GUI/MessageLogs/Refresh" to="GUI/MessageLogs" method="_refresh_messages"]
+[connection signal="pressed" from="GUI/SettingsMenu/Save" to="GUI/SettingsMenu" method="apply_settings"]

@@ -10,6 +10,7 @@ const PORT = 5000
 
 const JOIN_ROOM = DOMAIN_WS + "/join?room_id=%s"
 const GET_ROOM = DOMAIN + "/rooms?room_id=%s"
+const RENAME_SELF = DOMAIN + "/rooms/name/user?room_id=%s"
 
 const MESSAGE_FORMAT = "m%s"
 const MOVE_FORMAT = "/%s,%s"
@@ -21,7 +22,9 @@ signal move_received(String)
 @onready var socket = WebSocketPeer.new()
 var prev_state : int = -1
 var udp_peer = PacketPeerUDP.new()
+
 var room_get_request = RequestHandler.new()
+var rename_user = RequestHandler.new()
 
 var active_room = -1
 var active_characters : Array = []
@@ -68,6 +71,12 @@ func move_character(new_pos : Vector2) -> bool:
 	
 	return true
 
+func rename_self(new_name : String):
+	if active_room < 0:
+		return
+	
+	rename_user.open_request_auth(RENAME_SELF % [active_room], [], HTTPClient.METHOD_POST)
+
 func exit_room():
 	if socket.get_ready_state() != WebSocketPeer.STATE_OPEN:
 		return false
@@ -85,7 +94,11 @@ func request_joined() -> bool:
 func _ready():
 	udp_peer.set_dest_address(HOST, PORT)
 	
+	room_get_request.timeout = 5
 	add_child(room_get_request)
+	
+	rename_user.timeout = 5
+	add_child(rename_user)
 	
 	set_process(false)
 	on_connection.connect(func(_con : WebSocketPeer):

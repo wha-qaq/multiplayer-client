@@ -4,6 +4,9 @@ const SPEED = 400.0
 
 var can_move : bool = true
 
+func name_character(new_name : String):
+	$Control/Label.text = new_name
+
 func _physics_process(_delta: float) -> void:
 	if not can_move:
 		velocity = Vector2.ZERO

@@ -12,6 +12,10 @@ func spawn_character(uid : int, player_name : String, character_position : Vecto
 	clone.set_meta("uid", uid)
 	clone.set_meta("uname", player_name)
 	
+	var label = clone.get_node("Control/Label")
+	if label is Label:
+		label.text = player_name
+	
 	add_child(clone)
 	clone.global_position = character_position
 	clone.show()
@@ -52,3 +56,12 @@ func del_character(uid):
 		return
 	
 	character.queue_free()
+
+func name_character(uid : int, character_name : String):
+	var character = find_character(uid)
+	if not character:
+		return
+	
+	var label = character.get_node("Control/Label")
+	if label is Label:
+		label.text = character_name

@@ -2,23 +2,33 @@ extends Node2D
 
 const base_message = preload("res://Scenes/Objects/message.tscn")
 
-var change_pattern = RegEx.create_from_string("^(\\d+)([/jml])(.*)$")
+var change_pattern = RegEx.create_from_string("^(\\d+)([/jmln])(.*)$")
 @onready var main_character = $MainCharacter
 
 @onready var character_replicator = $CharacterReplicator
 @onready var message_logs = $GUI/MessageLogs
+@onready var settings_menu = $GUI/SettingsMenu
 
 var active_players : Array[Dictionary] = []
 
 func get_player_name(uid : int) -> String:
 	for player in active_players:
 		if player.get("uid") == uid:
-			return player.get("uname", "")
+			return player.get("uname", "Unnamed User")
 	
-	return ""
+	return "Unnamed User"
+
+func change_character_name(uid : int, player_name : String):
+	active_players.append({"uid": uid, "uname": player_name})
+	
+	if uid == PlayerAuth.get_uid():
+		main_character.name_character(player_name)
+		settings_menu.load_settings(player_name)
+		return
+	
+	character_replicator.name_character(uid, player_name)
 
 func join_character(uid : int, player_name : String, char_position : Vector2):
-	print(uid, player_name, char_position)
 	if PlayerAuth.get_uid() == uid:
 		return
 	
@@ -55,7 +65,6 @@ func move_character(uid : int, character_position : Vector2):
 	character_replicator.move_character(uid, character_position)
 
 func handle_change(full_change : String):
-	print(full_change)
 	var result = change_pattern.search(full_change)
 	if not result:
 		print("Invalid response")
@@ -69,6 +78,10 @@ func handle_change(full_change : String):
 	var uid = int(uid_string)
 	var change = result.get_string(2)
 	var data = result.get_string(3)
+	
+	if change == "n":
+		change_character_name(uid, data)
+		return
 	
 	if change == "j":
 		var char_details = data.split(",", true, 2)
@@ -134,3 +147,6 @@ func _show_logs() -> void:
 
 func _toggle_user_movement(disable : bool) -> void:
 	main_character.can_move = not disable
+
+func _toggle_settings() -> void:
+	settings_menu.visible = !settings_menu.visible
