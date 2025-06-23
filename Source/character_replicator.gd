@@ -7,9 +7,10 @@ const INTERPOLATION_TIME = 0.15
 func _ready():
 	$BaseReplication.hide()
 
-func spawn_character(uid : int, character_position : Vector2):
+func spawn_character(uid : int, player_name : String, character_position : Vector2):
 	var clone = $BaseReplication.duplicate()
 	clone.set_meta("uid", uid)
+	clone.set_meta("uname", player_name)
 	
 	add_child(clone)
 	clone.global_position = character_position

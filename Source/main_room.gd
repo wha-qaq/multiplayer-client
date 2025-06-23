@@ -8,21 +8,38 @@ var change_pattern = RegEx.create_from_string("^(\\d+)([/jml])(.*)$")
 @onready var character_replicator = $CharacterReplicator
 @onready var message_logs = $GUI/MessageLogs
 
-func join_character(uid : int, char_position : Vector2):
+var active_players : Array[Dictionary] = []
+
+func get_player_name(uid : int) -> String:
+	for player in active_players:
+		if player.get("uid") == uid:
+			return player.get("uname", "")
+	
+	return ""
+
+func join_character(uid : int, player_name : String, char_position : Vector2):
+	print(uid, player_name, char_position)
 	if PlayerAuth.get_uid() == uid:
 		return
 	
-	character_replicator.spawn_character(uid, char_position)
+	character_replicator.spawn_character(uid, player_name, char_position)
+	active_players.append({"uid": uid, "uname": player_name})
 
 func leave_character(uid : int):
 	if PlayerAuth.get_uid() == uid:
 		return
 	
 	character_replicator.del_character(uid)
+	
+	for idx in range(len(active_players)):
+		var p_uid = active_players[idx].get("uid")
+		if p_uid == uid:
+			active_players.remove_at(idx)
+			return
 
 func say_message(uid : int, str_message : String):
+	message_logs.log_message(uid, get_player_name(uid), str_message)
 	
-	message_logs.log_message(uid, str_message)
 	if PlayerAuth.get_uid() == uid:
 		var message = base_message.instantiate()
 		message.say(str_message)
@@ -38,6 +55,7 @@ func move_character(uid : int, character_position : Vector2):
 	character_replicator.move_character(uid, character_position)
 
 func handle_change(full_change : String):
+	print(full_change)
 	var result = change_pattern.search(full_change)
 	if not result:
 		print("Invalid response")
@@ -53,14 +71,15 @@ func handle_change(full_change : String):
 	var data = result.get_string(3)
 	
 	if change == "j":
-		var char_position = data.split(",", true, 1)
-		if char_position.size() < 2:
+		var char_details = data.split(",", true, 2)
+		print(char_details)
+		if char_details.size() < 3:
 			return
 		
-		if not (char_position[0].is_valid_float() and char_position[1].is_valid_float()):
+		if not (char_details[1].is_valid_float() and char_details[2].is_valid_float()):
 			return
 		
-		join_character(uid, Vector2(float(char_position[0]), float(char_position[1])))
+		join_character(uid, str(char_details[0]), Vector2(float(char_details[0]), float(char_details[1])))
 		return
 	
 	if change == "l":
@@ -106,7 +125,6 @@ func _process(_delta: float) -> void:
 
 func _send_message(new_text: String) -> void:
 	RoomConnector.send_message(new_text)
-	# TODO: Deselection on enter
 
 func _exit_room():
 	RoomConnector.exit_room()
