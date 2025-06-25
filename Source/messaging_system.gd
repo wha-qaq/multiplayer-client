@@ -13,3 +13,7 @@ func flush_messages():
 	var dup = messages.duplicate()
 	messages.clear()
 	return dup
+
+func disconnect_connectors():
+	for connection in on_message.get_connections():
+		on_message.disconnect(connection.get("callable"))

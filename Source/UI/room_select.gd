@@ -4,7 +4,7 @@ const DOMAIN = "http://127.0.0.1:5000"
 const ROOM_ACCESS = DOMAIN + "/users/access"
 const ROOM_CREATE = DOMAIN + "/rooms"
 const ROOM_GET = DOMAIN + "/rooms?room_id=%s"
-const ROOM_PERM = DOMAIN + "/rooms?room_id=%s&allow=%s"
+const ROOM_PERM = DOMAIN + "/rooms/modify?room_id=%s&allow=%s"
 
 @onready var room_example = $RoomExample
 @onready var room_details = $RoomDetails

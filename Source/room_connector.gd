@@ -6,6 +6,7 @@ const DOMAIN = "http://127.0.0.1:5000"
 const DOMAIN_WS = "ws://127.0.0.1:5000"
 
 const HOST = "127.0.0.1"
+const WEBSOCKET_OK = 1000
 const PORT = 5000
 
 const JOIN_ROOM = DOMAIN_WS + "/join?room_id=%s"
@@ -124,9 +125,12 @@ func _process(_delta):
 	elif state == WebSocketPeer.STATE_CLOSED:
 		var code = socket.get_close_code()
 		var reason = socket.get_close_reason()
-		print("WebSocket closed with code: %d, reason %s. Clean: %s" % [code, reason, code != -1])
 		set_process(false)
 		udp_peer.close()
+		if code == WEBSOCKET_OK:
+			return
+		MessagingSystem.disconnect_connectors()
+		MessagingSystem.add_message(reason)
 
 func prepare_room(room_id : int, characters : Array, messages : Array):
 	active_room = room_id
