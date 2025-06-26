@@ -54,11 +54,11 @@ func get_auth_token():
 func get_uid():
 	return uid
 
-func request_login(username, password):
-	return request.open_request(LOGIN % [username, password], [], HTTPClient.METHOD_POST)
+func request_login(username : String, password : String):
+	return request.open_request(LOGIN % [username.uri_encode(), password.uri_encode()], [], HTTPClient.METHOD_POST)
 
-func request_creation(username, password):
-	return request.open_request(CREATE_ACCOUNT % [username, password], [], HTTPClient.METHOD_POST)
+func request_creation(username : String, password : String):
+	return request.open_request(CREATE_ACCOUNT % [username.uri_encode(), password.uri_encode()], [], HTTPClient.METHOD_POST)
 
 func invalidate_token():
 	auth = ""

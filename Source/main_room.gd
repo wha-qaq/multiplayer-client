@@ -26,7 +26,7 @@ func change_character_name(uid : int, player_name : String):
 		settings_menu.load_settings(player_name)
 		return
 	
-	character_replicator.name_character(uid, player_name)
+	character_replicator.name_character(uid, player_name.uri_encode())
 
 func join_character(uid : int, player_name : String, char_position : Vector2):
 	if PlayerAuth.get_uid() == uid:

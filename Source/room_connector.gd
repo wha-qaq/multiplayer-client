@@ -11,7 +11,7 @@ const PORT = 5000
 
 const JOIN_ROOM = DOMAIN_WS + "/join?room_id=%s"
 const GET_ROOM = DOMAIN + "/rooms?room_id=%s"
-const RENAME_SELF = DOMAIN + "/rooms/name/user?room_id=%s"
+const RENAME_SELF = DOMAIN + "/rooms/name/user?room_id=%s&username=%s"
 
 const MESSAGE_FORMAT = "m%s"
 const MOVE_FORMAT = "/%s,%s"
@@ -76,7 +76,7 @@ func rename_self(new_name : String):
 	if active_room < 0:
 		return
 	
-	rename_user.open_request_auth(RENAME_SELF % [active_room], [], HTTPClient.METHOD_POST)
+	rename_user.open_request_auth(RENAME_SELF % [active_room, new_name.uri_encode()], [], HTTPClient.METHOD_POST)
 
 func exit_room():
 	if socket.get_ready_state() != WebSocketPeer.STATE_OPEN:

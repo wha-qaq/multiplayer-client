@@ -78,7 +78,7 @@ func request_create_room():
 		return
 	reflect_added(response)
 
-func request_get_room(room_id):
+func request_get_room(room_id : int):
 	var response = await room_open.request_block_auth(ROOM_GET % room_id, [], HTTPClient.METHOD_GET)
 	if not response:
 		return
@@ -90,7 +90,7 @@ func request_modify_permission(username : String, new_permission : bool):
 		return
 	
 	var allow = "1" if new_permission else "0"
-	var req = ROOM_PERM % [selected_room, allow]
+	var req = ROOM_PERM % [selected_room, allow.uri_encode()]
 	var headers = ["Content-Type: application/json"]
 	var body = JSON.stringify([username])
 	return room_post.open_request_auth(req, headers, HTTPClient.METHOD_POST, body)
