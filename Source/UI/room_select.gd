@@ -12,6 +12,8 @@ const ROOM_PERM = DOMAIN + "/rooms/modify?room_id=%s&allow=%s"
 
 @onready var room_container = $Rooms/Scrolling/Margin/Container
 
+@onready var select_prompt = $RoomDetails/SelectPrompt
+
 @onready var room_request : RequestHandler = RequestHandler.new()
 @onready var room_open : RequestHandler = RequestHandler.new()
 @onready var room_get : RequestHandler = RequestHandler.new()
@@ -24,9 +26,11 @@ func change_selection(new_room : int):
 	
 	if selected_room < 0:
 		room_initiate.text = "Create Room"
+		select_prompt.show()
 		return
 	
 	room_initiate.text = "Join Room"
+	select_prompt.hide()
 	request_get_room(new_room)
 
 func populate_rooms(response):
@@ -66,9 +70,6 @@ func reflect_added(response):
 	
 	create_room_button(room_name, id)
 
-func permission_changed(response):
-	room_details.reflect_change(response)
-
 func request_rooms():
 	return room_request.open_request_auth(ROOM_ACCESS)
 
@@ -93,7 +94,10 @@ func request_modify_permission(username : String, new_permission : bool):
 	var req = ROOM_PERM % [selected_room, allow.uri_encode()]
 	var headers = ["Content-Type: application/json"]
 	var body = JSON.stringify([username])
-	return room_post.open_request_auth(req, headers, HTTPClient.METHOD_POST, body)
+	
+	var response = await room_post.request_block_auth(req, headers, HTTPClient.METHOD_POST, body)
+	
+	room_details.reflect_change(response)
 
 func initiate_join_room(_socket : WebSocketPeer):
 	get_tree().change_scene_to_file("res://Scenes/main_room.tscn")

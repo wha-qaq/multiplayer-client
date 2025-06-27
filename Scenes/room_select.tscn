@@ -112,13 +112,13 @@ anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 4.0
-offset_top = -128.0
+offset_top = -112.0
 offset_right = -4.0
-offset_bottom = -128.0
+offset_bottom = -112.0
 grow_horizontal = 2
 
 [node name="change_permission" type="Button" parent="RoomDetails"]
-custom_minimum_size = Vector2(0, 64)
+custom_minimum_size = Vector2(0, 48)
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 1.0
@@ -172,6 +172,40 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="SelectPrompt" type="Label" parent="RoomDetails"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Please select a room"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Panel" type="Panel" parent="RoomDetails/SelectPrompt"]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="room_change_name" type="CheckButton" parent="RoomDetails"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -112.0
+offset_right = -8.0
+offset_bottom = -112.0
+grow_horizontal = 0
+grow_vertical = 0
+text = " Change room name?"
 
 [node name="RoomExample" type="Control" parent="."]
 visible = false

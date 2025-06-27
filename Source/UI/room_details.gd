@@ -53,7 +53,6 @@ func clear_details():
 func reflect_change(details : Dictionary):
 	var changed = details.get("changed")
 	var permission = details.get("new_permission")
-	print(changed, permission)
 	if not (changed is Array):
 		return
 	if not (permission is bool):
