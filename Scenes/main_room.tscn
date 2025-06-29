@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://nuqm4wty6am1"]
+[gd_scene load_steps=15 format=3 uid="uid://nuqm4wty6am1"]
 
 [ext_resource type="Script" uid="uid://b8wl1pqpavw0t" path="res://Source/main_room.gd" id="1_b2wh1"]
 [ext_resource type="Script" uid="uid://d3jt8ayf2tkmm" path="res://Source/character.gd" id="1_kc0wd"]
@@ -13,21 +13,17 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_d08tv"]
 radius = 64.0
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_giuuk"]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_aorri"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_w1vw5"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_crhwu"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_oool8"]
 content_margin_left = 8.0
-content_margin_top = 8.0
 content_margin_right = 8.0
-content_margin_bottom = 8.0
-bg_color = Color(0, 0, 0, 0.392157)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(1, 1, 1, 0.588235)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_v1qvw"]
 
 [node name="MainRoom" type="Node2D"]
 y_sort_enabled = true
@@ -103,11 +99,11 @@ grow_vertical = 0
 metadata/_edit_use_anchors_ = true
 
 [node name="Leave" type="Button" parent="GUI"]
-custom_minimum_size = Vector2(64, 64)
-anchors_preset = 1
+custom_minimum_size = Vector2(96, 64)
+anchors_preset = -1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_top = 16.0
+offset_top = 176.0
 offset_right = -16.0
 grow_horizontal = 0
 text = "Leave"
@@ -115,26 +111,22 @@ metadata/_edit_use_anchors_ = true
 
 [node name="OpenLogs" type="Button" parent="GUI"]
 custom_minimum_size = Vector2(96, 64)
-anchors_preset = 1
+anchors_preset = -1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -154.0
-offset_top = 16.0
-offset_right = -90.0
-offset_bottom = 80.0
+offset_top = 96.0
+offset_right = -16.0
 grow_horizontal = 0
 text = "Logs"
 metadata/_edit_use_anchors_ = true
 
 [node name="Settings" type="Button" parent="GUI"]
 custom_minimum_size = Vector2(96, 64)
-anchors_preset = 1
+anchors_preset = -1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -294.0
 offset_top = 16.0
-offset_right = -198.0
-offset_bottom = 80.0
+offset_right = -16.0
 grow_horizontal = 0
 text = "Settings"
 metadata/_edit_use_anchors_ = true
@@ -172,7 +164,10 @@ anchor_right = 0.8
 anchor_bottom = 1.0
 offset_top = 16.0
 offset_bottom = -16.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_giuuk")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_aorri")
+
+[node name="Background" type="Panel" parent="GUI/MessageLogs/Panel"]
+layout_mode = 2
 
 [node name="Scroll" type="ScrollContainer" parent="GUI/MessageLogs/Panel"]
 layout_mode = 2
@@ -255,10 +250,17 @@ anchor_right = 0.8
 anchor_bottom = 1.0
 offset_top = 16.0
 offset_bottom = -16.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_giuuk")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_w1vw5")
+
+[node name="Background" type="Panel" parent="GUI/SettingsMenu/Panel"]
+layout_mode = 2
 
 [node name="VSplit" type="VSplitContainer" parent="GUI/SettingsMenu/Panel"]
 layout_mode = 2
+theme_override_styles/split_bar_background = SubResource("StyleBoxEmpty_crhwu")
+split_offset = 4
+dragging_enabled = false
+dragger_visibility = 1
 
 [node name="Label" type="Label" parent="GUI/SettingsMenu/Panel/VSplit"]
 layout_mode = 2
@@ -278,9 +280,11 @@ size_flags_vertical = 3
 
 [node name="DisplayName" type="PanelContainer" parent="GUI/SettingsMenu/Panel/VSplit/Scroll/Vertical"]
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_oool8")
 
 [node name="HSplit" type="HSplitContainer" parent="GUI/SettingsMenu/Panel/VSplit/Scroll/Vertical/DisplayName"]
 layout_mode = 2
+theme_override_styles/split_bar_background = SubResource("StyleBoxEmpty_v1qvw")
 split_offset = 8
 collapsed = true
 dragging_enabled = false

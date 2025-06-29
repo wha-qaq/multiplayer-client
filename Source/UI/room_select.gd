@@ -125,6 +125,7 @@ func refresh_rooms():
 	room_details.clear_details()
 	RoomConnector.deselect_room()
 	room_initiate.text = "Create Room"
+	select_prompt.show()
 	request_rooms()
 
 func initiate_room() -> void:
