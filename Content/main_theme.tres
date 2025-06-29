@@ -98,7 +98,7 @@ corner_detail = 5
 [sub_resource type="FontVariation" id="FontVariation_lekoq"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mx6gl"]
-bg_color = Color(0.956863, 0.921569, 0.827451, 0.784314)
+bg_color = Color(0.956863, 0.909804, 0.92549, 0.784314)
 corner_radius_top_left = 4
 corner_radius_top_right = 4
 corner_radius_bottom_right = 4
