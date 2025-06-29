@@ -21,11 +21,6 @@ PlayerAuth="*res://Source/Networking/player_auth.gd"
 MessagingSystem="*res://Source/messaging_system.gd"
 RoomConnector="*res://Source/room_connector.gd"
 
-[editor]
-
-version_control/plugin_name="GitPlugin"
-version_control/autoload_on_startup=true
-
 [gui]
 
 theme/custom="uid://dyhjmh1vxjsi1"
