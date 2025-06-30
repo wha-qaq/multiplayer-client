@@ -1,5 +1,6 @@
 extends Control
 
+signal room_change_name(new_name : String)
 signal change_permission(user : String, new_permission : bool)
 
 @onready var user_example = $User
@@ -8,7 +9,11 @@ signal change_permission(user : String, new_permission : bool)
 @onready var username_input = $LineEdit
 @onready var change_perms = $change_permission
 
+@onready var room_name_toggle = $room_change_name
+
 var permission_change : bool = true
+
+var active_room_name = ""
 
 func find_node_of(username : String) -> Control:
 	for clone in container.get_children():
@@ -22,6 +27,10 @@ func find_node_of(username : String) -> Control:
 	return null
 
 func modify_layout(text : String):
+	if room_name_toggle.button_pressed:
+		change_perms.text = "RENAME ROOM"
+		return
+	
 	var user = find_node_of(text)
 	if not user:
 		change_perms.text = "ADD USER"
@@ -94,8 +103,20 @@ func populate_details(details : Dictionary):
 		return
 
 func request_permission():
-	var username = username_input.text
-	change_permission.emit(username, permission_change)
-	
+	var input = username_input.text
 	username_input.text = ""
+	
+	if room_name_toggle.button_pressed:
+		room_name_toggle.button_pressed = false
+		modify_layout("")
+		room_change_name.emit(input)
+		return
+	
+	change_permission.emit(input, permission_change)
 	modify_layout("")
+
+func _toggle_name_change(toggled_on: bool) -> void:
+	modify_layout(username_input.text)
+	
+	if toggled_on:
+		username_input.text = active_room_name

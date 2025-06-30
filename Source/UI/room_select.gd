@@ -4,7 +4,9 @@ const DOMAIN = "http://127.0.0.1:5000"
 const ROOM_ACCESS = DOMAIN + "/users/access"
 const ROOM_CREATE = DOMAIN + "/rooms"
 const ROOM_GET = DOMAIN + "/rooms?room_id=%s"
+
 const ROOM_PERM = DOMAIN + "/rooms/modify?room_id=%s&allow=%s"
+const ROOM_RENAME = DOMAIN + "/rooms/modify?room_id=%s&room_name=%s"
 
 @onready var room_example = $RoomExample
 @onready var room_details = $RoomDetails
@@ -21,8 +23,9 @@ const ROOM_PERM = DOMAIN + "/rooms/modify?room_id=%s&allow=%s"
 
 var selected_room : int = -1
 
-func change_selection(new_room : int):
+func change_selection(new_room : int, room_name : String):
 	selected_room = new_room
+	room_details.active_room_name = room_name
 	
 	if selected_room < 0:
 		room_initiate.text = "Create Room"
@@ -51,12 +54,10 @@ func populate_rooms(response):
 			create_room_button(room_name, id)
 
 func create_room_button(room_name : String, id : int):
-	var clone = room_example.duplicate()
+	var clone = room_example.duplicate() as RoomButton
 	room_container.add_child(clone)
-	if clone.has_method("display"):
-		clone.display(room_name, id)
-	if clone.has_signal("pressed"):
-		clone.pressed.connect(change_selection)
+	clone.display(room_name, id)
+	clone.room_selected.connect(change_selection)
 
 func reflect_added(response):
 	var id = response.get("id")
@@ -99,6 +100,25 @@ func request_modify_permission(username : String, new_permission : bool):
 	
 	room_details.reflect_change(response)
 
+func request_modify_name(new_name : String):
+	if selected_room < 0:
+		return
+	
+	var req = ROOM_RENAME % [selected_room, new_name.uri_encode()]
+	var response = await room_post.request_block_auth(req, [], HTTPClient.METHOD_POST)
+	
+	if not response:
+		return
+	
+	room_details.active_room_name = new_name
+	for item in room_container.get_children():
+		var room = item as RoomButton
+		if not room:
+			return
+		if room.id != selected_room:
+			continue
+		room.display(new_name, room.id)
+
 func initiate_join_room(_socket : WebSocketPeer):
 	get_tree().change_scene_to_file("res://Scenes/main_room.tscn")
 
@@ -116,6 +136,7 @@ func _ready() -> void:
 	RoomConnector.on_connection.connect(initiate_join_room)
 	
 	room_details.change_permission.connect(request_modify_permission)
+	room_details.room_change_name.connect(request_modify_name)
 	
 	await get_tree().process_frame
 	

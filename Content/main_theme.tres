@@ -106,6 +106,7 @@ corner_radius_bottom_left = 4
 
 [resource]
 Button/colors/font_color = Color(0.333333, 0.345098, 0.47451, 1)
+Button/colors/font_focus_color = Color(0.333333, 0.345098, 0.47451, 1)
 Button/colors/font_hover_color = Color(0.596078, 0.631373, 0.737255, 1)
 Button/colors/font_outline_color = Color(0.333333, 0.345098, 0.47451, 1)
 Button/colors/font_pressed_color = Color(0.333333, 0.345098, 0.47451, 1)

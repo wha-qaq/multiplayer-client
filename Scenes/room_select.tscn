@@ -268,4 +268,5 @@ layout_mode = 1
 [connection signal="pressed" from="RoomInitiate" to="." method="initiate_room"]
 [connection signal="text_changed" from="RoomDetails/LineEdit" to="RoomDetails" method="modify_layout"]
 [connection signal="pressed" from="RoomDetails/change_permission" to="RoomDetails" method="request_permission"]
+[connection signal="toggled" from="RoomDetails/room_change_name" to="RoomDetails" method="_toggle_name_change"]
 [connection signal="pressed" from="Refresh" to="." method="refresh_rooms"]
