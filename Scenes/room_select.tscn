@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://bgwjwdg5fu2qs"]
+[gd_scene load_steps=7 format=3 uid="uid://bgwjwdg5fu2qs"]
 
 [ext_resource type="Script" uid="uid://cp60kidq0vyyw" path="res://Source/UI/room_select.gd" id="1_0dhwt"]
 [ext_resource type="Theme" uid="uid://dyhjmh1vxjsi1" path="res://Content/main_theme.tres" id="2_4ihgt"]
 [ext_resource type="Script" uid="uid://bbea5oqu0kmmo" path="res://Source/UI/room_details.gd" id="3_k65m4"]
 [ext_resource type="Script" uid="uid://4pb87lbmwj85" path="res://Source/UI/room_selection.gd" id="3_tff5n"]
+[ext_resource type="Script" uid="uid://cw7fhe4lhnsfl" path="res://Source/UI/warning.gd" id="4_pnaqq"]
 [ext_resource type="PackedScene" uid="uid://bwmfa211x63wn" path="res://Scenes/Objects/notifications.tscn" id="5_o62ik"]
 
 [node name="RoomSelect" type="Control"]
@@ -115,33 +116,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="LineEdit" type="LineEdit" parent="RoomDetails"]
-custom_minimum_size = Vector2(0, 54)
-layout_mode = 1
-anchors_preset = -1
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 4.0
-offset_top = -112.0
-offset_right = -4.0
-offset_bottom = -112.0
-grow_horizontal = 2
-
-[node name="change_permission" type="Button" parent="RoomDetails"]
-custom_minimum_size = Vector2(0, 48)
-layout_mode = 1
-anchors_preset = -1
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 4.0
-offset_right = -4.0
-offset_bottom = -6.0
-grow_horizontal = 2
-grow_vertical = 0
-text = "ADD USER"
-
 [node name="User" type="Control" parent="RoomDetails"]
 visible = false
 custom_minimum_size = Vector2(0, 64)
@@ -184,7 +158,34 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="room_change_name" type="CheckButton" parent="RoomDetails"]
+[node name="ModifyEdit" type="LineEdit" parent="RoomDetails"]
+custom_minimum_size = Vector2(0, 54)
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = -112.0
+offset_right = -4.0
+offset_bottom = -112.0
+grow_horizontal = 2
+
+[node name="ModifyRoomButton" type="Button" parent="RoomDetails"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_right = -4.0
+offset_bottom = -6.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "ADD USER"
+
+[node name="ToggleNameChange" type="CheckButton" parent="RoomDetails"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 1.0
@@ -262,11 +263,87 @@ offset_top = -88.0
 offset_bottom = -88.0
 text = "Refresh Rooms"
 
+[node name="Warning" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("4_pnaqq")
+
+[node name="Panel" type="Control" parent="Warning"]
+layout_mode = 1
+anchor_left = 0.346354
+anchor_top = 0.407407
+anchor_right = 0.653646
+anchor_bottom = 0.592593
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="Panel" type="Panel" parent="Warning/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Message" type="Label" parent="Warning/Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -109.0
+offset_top = 16.0
+offset_right = 109.0
+offset_bottom = 39.0
+grow_horizontal = 2
+size_flags_vertical = 1
+text = "Delete room?
+(Cannot undo)"
+horizontal_alignment = 1
+
+[node name="Yes" type="Button" parent="Warning/Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -72.0
+offset_top = -40.0
+offset_right = -8.00002
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Yes"
+
+[node name="No" type="Button" parent="Warning/Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 7.99998
+offset_top = -40.0
+offset_right = 72.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "No"
+
 [node name="Notifications" parent="." instance=ExtResource("5_o62ik")]
 layout_mode = 1
 
 [connection signal="pressed" from="RoomInitiate" to="." method="initiate_room"]
-[connection signal="text_changed" from="RoomDetails/LineEdit" to="RoomDetails" method="modify_layout"]
-[connection signal="pressed" from="RoomDetails/change_permission" to="RoomDetails" method="request_permission"]
-[connection signal="toggled" from="RoomDetails/room_change_name" to="RoomDetails" method="_toggle_name_change"]
+[connection signal="text_changed" from="RoomDetails/ModifyEdit" to="RoomDetails" method="modify_layout"]
+[connection signal="text_submitted" from="RoomDetails/ModifyEdit" to="RoomDetails" method="request_permission"]
+[connection signal="pressed" from="RoomDetails/ModifyRoomButton" to="RoomDetails" method="request_permission"]
+[connection signal="toggled" from="RoomDetails/ToggleNameChange" to="RoomDetails" method="_toggle_name_change"]
 [connection signal="pressed" from="Refresh" to="." method="refresh_rooms"]
+[connection signal="pressed" from="Warning/Panel/Yes" to="Warning" method="_on_pressed" binds= [true]]
+[connection signal="pressed" from="Warning/Panel/No" to="Warning" method="_on_pressed" binds= [false]]

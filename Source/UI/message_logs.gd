@@ -2,25 +2,31 @@ extends Control
 
 @onready var base_user = $User
 @onready var base_message = $Message
+@onready var spacer = $Spacer
 
 @onready var message_log = $Panel/Scroll/Vertical
 
 var last_id = -1
 
+func log_user(uid : int, uname : String):
+	if last_id != -1:
+		var spacer_dup = spacer.duplicate()
+		message_log.add_child(spacer_dup)
+		spacer_dup.show()
+	
+	last_id = uid
+	
+	var user = base_user.duplicate()
+	user.text = str(uname)
+	message_log.add_child(user)
+	user.show()
+
 func log_message(uid : int, uname : String, content : String):
 	if uid != last_id:
-		last_id = uid
-		var user = base_user.duplicate()
-		var label = user.get_node("Label")
-		if label and label is Label:
-			label.text = str(uname)
-		message_log.add_child(user)
-		user.show()
+		log_user(uid, uname)
 	
 	var message = base_message.duplicate()
-	var label = message.get_node("Label")
-	if label and label is Label:
-		label.text = str(content)
+	message.text = str(content)
 	message_log.add_child(message)
 	message.show()
 

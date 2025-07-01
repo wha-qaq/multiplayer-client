@@ -6,8 +6,11 @@ var change_pattern = RegEx.create_from_string("^(\\d+)([/jmln])(.*)$")
 @onready var main_character = $MainCharacter
 
 @onready var character_replicator = $CharacterReplicator
+
 @onready var message_logs = $GUI/MessageLogs
 @onready var settings_menu = $GUI/SettingsMenu
+@onready var deselect = $GUI/DeselectFrame
+@onready var message_box = $GUI/Main/MessageBox
 
 var active_players : Array[Dictionary] = []
 
@@ -131,6 +134,8 @@ func _ready() -> void:
 	timer.timeout.connect(func():
 		RoomConnector.move_character(main_character.global_position)
 	)
+	
+	get_viewport().gui_focus_changed.connect(_on_change_focus)
 
 func _process(_delta: float) -> void:
 	if not RoomConnector.is_room_connected():
@@ -138,15 +143,22 @@ func _process(_delta: float) -> void:
 
 func _send_message(new_text: String) -> void:
 	RoomConnector.send_message(new_text)
+	message_box.text = ""
+	deselect.grab_focus()
 
 func _exit_room():
 	RoomConnector.exit_room()
 
 func _show_logs() -> void:
 	message_logs.visible = !message_logs.visible
+	deselect.grab_focus()
 
 func _toggle_user_movement(disable : bool) -> void:
 	main_character.can_move = not disable
 
 func _toggle_settings() -> void:
 	settings_menu.visible = !settings_menu.visible
+	deselect.grab_focus()
+
+func _on_change_focus(control : Control):
+	_toggle_user_movement(control is LineEdit)

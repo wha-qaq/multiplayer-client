@@ -7,6 +7,7 @@ const ROOM_GET = DOMAIN + "/rooms?room_id=%s"
 
 const ROOM_PERM = DOMAIN + "/rooms/modify?room_id=%s&allow=%s"
 const ROOM_RENAME = DOMAIN + "/rooms/modify?room_id=%s&room_name=%s"
+const ROOM_DEL = DOMAIN + "/rooms/modify?room_id=%s"
 
 @onready var room_example = $RoomExample
 @onready var room_details = $RoomDetails
@@ -15,6 +16,7 @@ const ROOM_RENAME = DOMAIN + "/rooms/modify?room_id=%s&room_name=%s"
 @onready var room_container = $Rooms/Scrolling/Margin/Container
 
 @onready var select_prompt = $RoomDetails/SelectPrompt
+@onready var delete_warning = $Warning
 
 @onready var room_request : RequestHandler = RequestHandler.new()
 @onready var room_open : RequestHandler = RequestHandler.new()
@@ -99,9 +101,31 @@ func request_modify_permission(username : String, new_permission : bool):
 	var response = await room_post.request_block_auth(req, headers, HTTPClient.METHOD_POST, body)
 	
 	room_details.reflect_change(response)
+	room_details.clear_textbox()
+
+func request_delete_room():
+	var ok = await delete_warning.open_warning(room_details.active_room_name)
+	if not ok:
+		return
+	
+	var response = await room_post.request_block_auth(ROOM_DEL % [selected_room], [], HTTPClient.METHOD_DELETE)
+	if not response:
+		return
+	
+	var message_count = response.get("messages_deleted") as int
+	var users = response.get("users_removed") as int
+	message_count = message_count if message_count else 0
+	users = users if users else 0
+	
+	MessagingSystem.add_message("Deleted %s messages and removed %s users" % [message_count, len(users)])
+	room_details.clear_textbox()
 
 func request_modify_name(new_name : String):
 	if selected_room < 0:
+		return
+	
+	if new_name == "":
+		await request_delete_room()
 		return
 	
 	var req = ROOM_RENAME % [selected_room, new_name.uri_encode()]
@@ -114,10 +138,11 @@ func request_modify_name(new_name : String):
 	for item in room_container.get_children():
 		var room = item as RoomButton
 		if not room:
-			return
+			continue
 		if room.id != selected_room:
 			continue
 		room.display(new_name, room.id)
+	room_details.clear_textbox()
 
 func initiate_join_room(_socket : WebSocketPeer):
 	get_tree().change_scene_to_file("res://Scenes/main_room.tscn")

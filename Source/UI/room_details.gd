@@ -6,10 +6,10 @@ signal change_permission(user : String, new_permission : bool)
 @onready var user_example = $User
 @onready var container = $ScrollContainer/Container
 
-@onready var username_input = $LineEdit
-@onready var change_perms = $change_permission
+@onready var modify_edit = $ModifyEdit
+@onready var modify_button = $ModifyRoomButton
 
-@onready var room_name_toggle = $room_change_name
+@onready var toggle_name_change = $ToggleNameChange
 
 var permission_change : bool = true
 
@@ -27,20 +27,24 @@ func find_node_of(username : String) -> Control:
 	return null
 
 func modify_layout(text : String):
-	if room_name_toggle.button_pressed:
-		change_perms.text = "RENAME ROOM"
+	if toggle_name_change.button_pressed:
+		modify_button.text = "RENAME ROOM"
+		modify_edit.placeholder_text = "Deleting room..."
+		modify_edit.tooltip_text = "Type a name for the room, or set to empty to delete"
 		return
 	
 	var user = find_node_of(text)
+	modify_edit.placeholder_text = "Username"
+	modify_edit.tooltip_text = "Please type a username"
 	if not user:
-		change_perms.text = "ADD USER"
+		modify_button.text = "ADD USER"
 		permission_change = true
 		return
-	change_perms.text = "REMOVE USER"
+	modify_button.text = "REMOVE USER"
 	permission_change = false
 
 func highlight_user(username : String):
-	username_input.text = username
+	modify_edit.text = username
 	modify_layout(username)
 
 func add_user(display_name : String, username : String):
@@ -52,12 +56,16 @@ func add_user(display_name : String, username : String):
 	clone.show()
 	container.add_child(clone)
 
+func clear_textbox():
+	toggle_name_change.button_pressed = false
+	modify_edit.text = ""
+	modify_layout("")
+
 func clear_details():
 	for item in container.get_children():
 		item.queue_free()
 	
-	username_input.text = ""
-	modify_layout("")
+	clear_textbox()
 
 func reflect_change(details : Dictionary):
 	var changed = details.get("changed")
@@ -97,26 +105,18 @@ func populate_details(details : Dictionary):
 		var username = character.get("username", "unnamed")
 		var display_name = ("%s@%s" % [character_name, username]) if character_name else username
 		add_user(display_name, username)
-	
-	var messages = details.get("messages")
-	if not (characters is Array):
-		return
 
-func request_permission():
-	var input = username_input.text
-	username_input.text = ""
+func request_permission(_a = null):
+	var input = modify_edit.text
 	
-	if room_name_toggle.button_pressed:
-		room_name_toggle.button_pressed = false
-		modify_layout("")
+	if toggle_name_change.button_pressed:
 		room_change_name.emit(input)
 		return
 	
 	change_permission.emit(input, permission_change)
-	modify_layout("")
 
 func _toggle_name_change(toggled_on: bool) -> void:
-	modify_layout(username_input.text)
+	modify_layout(modify_edit.text)
 	
 	if toggled_on:
-		username_input.text = active_room_name
+		modify_edit.text = active_room_name

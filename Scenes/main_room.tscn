@@ -1,8 +1,9 @@
-[gd_scene load_steps=15 format=3 uid="uid://nuqm4wty6am1"]
+[gd_scene load_steps=19 format=3 uid="uid://nuqm4wty6am1"]
 
 [ext_resource type="Script" uid="uid://b8wl1pqpavw0t" path="res://Source/main_room.gd" id="1_b2wh1"]
 [ext_resource type="Script" uid="uid://d3jt8ayf2tkmm" path="res://Source/character.gd" id="1_kc0wd"]
 [ext_resource type="Texture2D" uid="uid://bbrfvri48mwbc" path="res://icon.svg" id="2_2euvg"]
+[ext_resource type="Script" uid="uid://b43ps1jlgwcu3" path="res://Source/UI/deselect_frame.gd" id="4_crhwu"]
 [ext_resource type="Script" uid="uid://2kwfykyajhc4" path="res://Source/character_replicator.gd" id="4_giuuk"]
 [ext_resource type="Script" uid="uid://dsubxwln41vby" path="res://Source/UI/message_logs.gd" id="4_lylwp"]
 [ext_resource type="PackedScene" uid="uid://bwmfa211x63wn" path="res://Scenes/Objects/notifications.tscn" id="5_8147l"]
@@ -14,6 +15,18 @@
 radius = 64.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_aorri"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dxdgq"]
+content_margin_left = 8.0
+content_margin_top = 16.0
+content_margin_right = 8.0
+content_margin_bottom = 16.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jgpsw"]
+content_margin_left = 16.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_xqkij"]
+content_margin_left = 4.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_w1vw5"]
 
@@ -75,6 +88,16 @@ vertical_alignment = 1
 
 [node name="GUI" type="CanvasLayer" parent="."]
 
+[node name="DeselectFrame" type="Control" parent="GUI"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_mode = 1
+script = ExtResource("4_crhwu")
+
 [node name="Main" type="Control" parent="GUI"]
 layout_mode = 3
 anchors_preset = 15
@@ -84,6 +107,7 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+mouse_filter = 2
 metadata/_edit_use_anchors_ = true
 
 [node name="MessageBox" type="LineEdit" parent="GUI/Main"]
@@ -96,6 +120,7 @@ anchor_bottom = 1.0
 offset_bottom = -20.0
 grow_horizontal = 2
 grow_vertical = 0
+placeholder_text = "Type a message here, and press Enter to send."
 metadata/_edit_use_anchors_ = true
 
 [node name="Leave" type="Button" parent="GUI"]
@@ -132,7 +157,6 @@ text = "Settings"
 metadata/_edit_use_anchors_ = true
 
 [node name="MessageLogs" type="Control" parent="GUI"]
-visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -164,6 +188,7 @@ anchor_right = 0.8
 anchor_bottom = 1.0
 offset_top = 16.0
 offset_bottom = -16.0
+focus_mode = 1
 theme_override_styles/panel = SubResource("StyleBoxEmpty_aorri")
 
 [node name="Background" type="Panel" parent="GUI/MessageLogs/Panel"]
@@ -171,6 +196,7 @@ layout_mode = 2
 
 [node name="Scroll" type="ScrollContainer" parent="GUI/MessageLogs/Panel"]
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_dxdgq")
 metadata/_edit_use_anchors_ = true
 
 [node name="Vertical" type="VBoxContainer" parent="GUI/MessageLogs/Panel/Scroll"]
@@ -178,47 +204,37 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="User" type="Control" parent="GUI/MessageLogs"]
+[node name="Message" type="Label" parent="GUI/MessageLogs"]
 visible = false
-custom_minimum_size = Vector2(0, 32)
-layout_mode = 2
-anchors_preset = 0
-offset_left = 238.4
-offset_top = 24.0
-offset_right = 913.4
-offset_bottom = 56.0
-
-[node name="Label" type="Label" parent="GUI/MessageLogs/User"]
-layout_mode = 2
-offset_left = 8.0
-offset_top = 2.0
-offset_right = 667.0
-offset_bottom = 30.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_font_sizes/font_size = 20
-text = "Username"
-
-[node name="Message" type="Control" parent="GUI/MessageLogs"]
-visible = false
-custom_minimum_size = Vector2(0, 64)
-layout_mode = 2
-anchors_preset = 0
-offset_left = 238.4
-offset_top = 24.0
-offset_right = 913.4
-offset_bottom = 88.0
-
-[node name="Label" type="Label" parent="GUI/MessageLogs/Message"]
-layout_mode = 2
-offset_left = 8.0
-offset_right = 667.0
-offset_bottom = 64.0
+offset_right = 121.0
+offset_bottom = 20.0
 size_flags_vertical = 1
 theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxEmpty_jgpsw")
 text = "Example message"
 
+[node name="User" type="Label" parent="GUI/MessageLogs"]
+visible = false
+offset_right = 100.0
+offset_bottom = 28.0
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxEmpty_xqkij")
+text = "Username"
+
+[node name="Spacer" type="Control" parent="GUI/MessageLogs"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 3
+anchors_preset = 0
+offset_left = 238.4
+offset_top = 32.0
+offset_right = 913.4
+offset_bottom = 64.0
+grow_horizontal = 2
+grow_vertical = 2
+
 [node name="SettingsMenu" type="Control" parent="GUI"]
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -250,6 +266,7 @@ anchor_right = 0.8
 anchor_bottom = 1.0
 offset_top = 16.0
 offset_bottom = -16.0
+focus_mode = 1
 theme_override_styles/panel = SubResource("StyleBoxEmpty_w1vw5")
 
 [node name="Background" type="Panel" parent="GUI/SettingsMenu/Panel"]
@@ -346,6 +363,7 @@ text = "USERNAME"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[connection signal="mouse_entered" from="GUI/DeselectFrame" to="GUI/DeselectFrame" method="_on_mouse_entered"]
 [connection signal="editing_toggled" from="GUI/Main/MessageBox" to="." method="_toggle_user_movement"]
 [connection signal="text_submitted" from="GUI/Main/MessageBox" to="." method="_send_message"]
 [connection signal="pressed" from="GUI/Leave" to="." method="_exit_room"]
