@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://bwmfa211x63wn" path="res://Scenes/Objects/notifications.tscn" id="3_4gxqj"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_v6p8y"]
-font_size = 78
+font_size = 96
 
 [node name="MainScreen" type="Control"]
 layout_mode = 3
@@ -54,6 +54,7 @@ offset_bottom = 64.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_ak2if")
+theme_override_font_sizes/font_size = 64
 text = "Start"
 metadata/_edit_use_anchors_ = true
 

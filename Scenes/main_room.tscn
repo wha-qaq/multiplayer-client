@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=4 uid="uid://nuqm4wty6am1"]
+[gd_scene load_steps=24 format=4 uid="uid://nuqm4wty6am1"]
 
 [ext_resource type="Script" uid="uid://b8wl1pqpavw0t" path="res://Source/main_room.gd" id="1_b2wh1"]
 [ext_resource type="Script" uid="uid://d3jt8ayf2tkmm" path="res://Source/character.gd" id="1_kc0wd"]
@@ -45,8 +45,6 @@ corner_radius_top_right = 128
 corner_radius_bottom_right = 128
 corner_radius_bottom_left = 128
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_aorri"]
-
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dxdgq"]
 content_margin_left = 8.0
 content_margin_top = 16.0
@@ -58,8 +56,6 @@ content_margin_left = 16.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_xqkij"]
 content_margin_left = 4.0
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_w1vw5"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_crhwu"]
 
@@ -237,6 +233,7 @@ placeholder_text = "Type a message here, and press Enter to send."
 metadata/_edit_use_anchors_ = true
 
 [node name="Joystick" type="Control" parent="GUI/Main"]
+visible = false
 custom_minimum_size = Vector2(196, 196)
 layout_mode = 1
 anchor_top = 1.0
@@ -329,22 +326,23 @@ grow_vertical = 0
 text = "Refresh
 Messages"
 
-[node name="Panel" type="PanelContainer" parent="GUI/MessageLogs"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.2
-anchor_right = 0.8
-anchor_bottom = 1.0
+[node name="Panel" type="Control" parent="GUI/MessageLogs"]
+layout_mode = 2
+anchors_preset = 0
+offset_left = 230.4
 offset_top = 16.0
-offset_bottom = -16.0
-focus_mode = 1
-theme_override_styles/panel = SubResource("StyleBoxEmpty_aorri")
+offset_right = 921.6
+offset_bottom = 632.0
 
 [node name="Background" type="Panel" parent="GUI/MessageLogs/Panel"]
 layout_mode = 2
+offset_right = 691.2
+offset_bottom = 616.0
 
 [node name="Scroll" type="ScrollContainer" parent="GUI/MessageLogs/Panel"]
 layout_mode = 2
+offset_right = 691.2
+offset_bottom = 616.0
 theme_override_styles/panel = SubResource("StyleBoxEmpty_dxdgq")
 metadata/_edit_use_anchors_ = true
 
@@ -352,6 +350,16 @@ metadata/_edit_use_anchors_ = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[node name="Close" type="Button" parent="GUI/MessageLogs/Panel"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_right = 1.0
+grow_horizontal = 0
+theme_override_font_sizes/font_size = 32
+text = "X"
 
 [node name="Message" type="Label" parent="GUI/MessageLogs"]
 visible = false
@@ -374,6 +382,7 @@ theme_override_styles/normal = SubResource("StyleBoxEmpty_xqkij")
 text = "Username"
 
 [node name="Spacer" type="Control" parent="GUI/MessageLogs"]
+visible = false
 custom_minimum_size = Vector2(0, 16)
 layout_mode = 3
 anchors_preset = 0
@@ -383,6 +392,7 @@ offset_right = 913.4
 offset_bottom = 64.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
 [node name="SettingsMenu" type="Control" parent="GUI"]
 visible = false
@@ -406,25 +416,26 @@ anchor_bottom = 1.0
 offset_left = 8.0
 offset_bottom = -18.0
 grow_vertical = 0
-text = "Apply
-Changes"
+text = "Apply and
+Close"
 
-[node name="Panel" type="PanelContainer" parent="GUI/SettingsMenu"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.2
-anchor_right = 0.8
-anchor_bottom = 1.0
+[node name="Panel" type="Control" parent="GUI/SettingsMenu"]
+layout_mode = 2
+anchors_preset = 0
+offset_left = 230.4
 offset_top = 16.0
-offset_bottom = -16.0
-focus_mode = 1
-theme_override_styles/panel = SubResource("StyleBoxEmpty_w1vw5")
+offset_right = 921.6
+offset_bottom = 632.0
 
 [node name="Background" type="Panel" parent="GUI/SettingsMenu/Panel"]
 layout_mode = 2
+offset_right = 691.2
+offset_bottom = 616.0
 
 [node name="VSplit" type="VSplitContainer" parent="GUI/SettingsMenu/Panel"]
 layout_mode = 2
+offset_right = 691.2
+offset_bottom = 616.0
 theme_override_styles/split_bar_background = SubResource("StyleBoxEmpty_crhwu")
 split_offset = 4
 dragging_enabled = false
@@ -470,6 +481,20 @@ size_flags_horizontal = 3
 size_flags_stretch_ratio = 2.0
 text = "Unnamed User"
 placeholder_text = "Display name cannot be empty"
+
+[node name="Close" type="Button" parent="GUI/SettingsMenu"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -270.4
+offset_top = 16.0
+offset_right = -230.4
+offset_bottom = 61.0
+grow_horizontal = 0
+theme_override_font_sizes/font_size = 32
+text = "X"
 
 [node name="Notifications" parent="GUI" instance=ExtResource("5_8147l")]
 anchor_left = 0.7
@@ -536,4 +561,7 @@ vertical_alignment = 1
 [connection signal="pressed" from="GUI/OpenLogs" to="." method="_show_logs"]
 [connection signal="pressed" from="GUI/Settings" to="." method="_toggle_settings"]
 [connection signal="pressed" from="GUI/MessageLogs/Refresh" to="GUI/MessageLogs" method="_refresh_messages"]
+[connection signal="pressed" from="GUI/MessageLogs/Panel/Close" to="GUI/MessageLogs" method="hide"]
+[connection signal="pressed" from="GUI/SettingsMenu/Save" to="GUI/SettingsMenu" method="hide"]
 [connection signal="pressed" from="GUI/SettingsMenu/Save" to="GUI/SettingsMenu" method="apply_settings"]
+[connection signal="pressed" from="GUI/SettingsMenu/Close" to="GUI/SettingsMenu" method="hide"]

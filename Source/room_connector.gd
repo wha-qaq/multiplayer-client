@@ -130,7 +130,7 @@ func _process(_delta):
 		if code == WEBSOCKET_OK:
 			return
 		MessagingSystem.disconnect_connectors()
-		MessagingSystem.add_message(reason)
+		MessagingSystem.add_message(reason if reason else "Server forcefully disconnected")
 
 func prepare_room(room_id : int, characters : Array, messages : Array):
 	active_room = room_id

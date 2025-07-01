@@ -3,8 +3,9 @@ extends Node
 const DOMAIN = "http://127.0.0.1:5000"
 const LOGIN = DOMAIN + "/login?username=%s&password=%s" # TODO: parse it securely
 const CREATE_ACCOUNT = DOMAIN + "/users?username=%s&password=%s"
+const LOGOUT = DOMAIN + "/logout"
 
-const AUTH_HEADER = "jwt: %s"
+const AUTH_HEADER = "Authorization: Bearer %s"
 
 const LOGIN_TOKEN_PATH = "user://login.token"
 const TITLE_SCREEN = "res://Scenes/title_screen.tscn"
@@ -55,10 +56,12 @@ func get_uid():
 	return uid
 
 func request_login(username : String, password : String):
-	return request.open_request(LOGIN % [username.uri_encode(), password.uri_encode()], [], HTTPClient.METHOD_POST)
+	var response = await request.request_block(LOGIN % [username.uri_encode(), password.uri_encode()], [], HTTPClient.METHOD_POST)
+	_token_recieved(response)
 
 func request_creation(username : String, password : String):
-	return request.open_request(CREATE_ACCOUNT % [username.uri_encode(), password.uri_encode()], [], HTTPClient.METHOD_POST)
+	var response = await request.open_request(CREATE_ACCOUNT % [username.uri_encode(), password.uri_encode()], [], HTTPClient.METHOD_POST)
+	_token_recieved(response)
 
 func invalidate_token():
 	auth = ""
@@ -67,8 +70,15 @@ func invalidate_token():
 	
 	get_tree().change_scene_to_file(TITLE_SCREEN)
 
+func logout_user():
+	var ok = await request.request_block_auth(LOGOUT, [], HTTPClient.METHOD_POST)
+	if not ok:
+		return
+	
+	invalidate_token()
+
 func _token_recieved(response : Variant):
-	if not (response is Dictionary):
+	if response is not Dictionary:
 		return
 	
 	if not response.get("token"):
@@ -79,7 +89,6 @@ func _token_recieved(response : Variant):
 
 func _ready() -> void:
 	request.timeout = 6
-	request.request_parsed.connect(_token_recieved)
 	add_child(request)
 	
 	if Engine.is_editor_hint():

@@ -36,35 +36,43 @@ func parse_request(result : HTTPRequest.Result, response_code : int, _headers : 
 	activated.emit(false)
 	if result != RESULT_SUCCESS:
 		MessagingSystem.add_message("Unable to connect to server at this time")
+		request_parsed.emit(null)
 		return
 	
 	if response_code == HTTPClient.RESPONSE_UNAUTHORIZED:
 		MessagingSystem.add_message("Please login again")
+		request_parsed.emit(null)
 		return
 	
 	if response_code == HTTPClient.RESPONSE_INTERNAL_SERVER_ERROR:
 		MessagingSystem.add_message("Server encountered an error")
+		request_parsed.emit(null)
 		return
 	
 	var response = JSON.parse_string(body.get_string_from_utf8())
 	if not response:
 		if response_code == HTTPClient.RESPONSE_NOT_FOUND:
 			MessagingSystem.add_message("Action could not occur")
+			request_parsed.emit(null)
 			return
 		
 		if response_code != HTTPClient.RESPONSE_OK:
 			MessagingSystem.add_message("Could not interpret response, error code: " + str(response_code))
+			request_parsed.emit(null)
 			return
 		
 		MessagingSystem.add_message("Could not interpret server's response, your app may be outdated")
+		request_parsed.emit(null)
 		return
 	
 	if not (response is Dictionary):
 		MessagingSystem.add_message("Could not interpret server's response, your app may be outdated")
+		request_parsed.emit(null)
 		return
 	
 	if response_code < 200 or response_code >= 300:
 		MessagingSystem.add_message("Error occurred: " + str(response.get("error")))
+		request_parsed.emit(null)
 		return
 	
 	request_parsed.emit(response)

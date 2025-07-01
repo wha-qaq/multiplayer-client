@@ -9,8 +9,6 @@ const ROOM_PERM = DOMAIN + "/rooms/modify?room_id=%s&allow=%s"
 const ROOM_RENAME = DOMAIN + "/rooms/modify?room_id=%s&room_name=%s"
 const ROOM_DEL = DOMAIN + "/rooms/modify?room_id=%s"
 
-const LOGOUT = DOMAIN + "/users/logout"
-
 @onready var room_example = $RoomExample
 @onready var room_details = $RoomDetails
 @onready var room_initiate = $RoomInitiate
@@ -18,7 +16,7 @@ const LOGOUT = DOMAIN + "/users/logout"
 @onready var room_container = $Rooms/Scrolling/Margin/Container
 
 @onready var select_prompt = $RoomDetails/SelectPrompt
-@onready var delete_warning = $Warning
+@onready var warning_notification = $Warning
 @onready var fade_into = $FadeInto
 
 @onready var room_request : RequestHandler = RequestHandler.new()
@@ -42,6 +40,9 @@ func change_selection(new_room : int, room_name : String):
 	request_get_room(new_room)
 
 func populate_rooms(response):
+	if response is not Dictionary:
+		return
+	
 	var rooms = response.get("result")
 	if rooms == null or not (rooms is Array):
 		MessagingSystem.add_message("Could not find rooms")
@@ -65,6 +66,9 @@ func create_room_button(room_name : String, id : int):
 	clone.room_selected.connect(change_selection)
 
 func reflect_added(response):
+	if response is not Dictionary:
+		return
+	
 	var id = response.get("id")
 	var room_name = response.get("room_name")
 	if not ((id is float) or (id is int)):
@@ -77,7 +81,8 @@ func reflect_added(response):
 	create_room_button(room_name, id)
 
 func request_rooms():
-	return room_request.open_request_auth(ROOM_ACCESS)
+	var response = await room_request.request_block_auth(ROOM_ACCESS)
+	populate_rooms(response)
 
 func request_create_room():
 	var response = await room_open.request_block_auth(ROOM_CREATE, [], HTTPClient.METHOD_PUT)
@@ -87,7 +92,7 @@ func request_create_room():
 
 func request_get_room(room_id : int):
 	var response = await room_open.request_block_auth(ROOM_GET % room_id, [], HTTPClient.METHOD_GET)
-	if not response:
+	if response is not Dictionary:
 		return
 	room_details.populate_details(response)
 	RoomConnector.prepare_room_by_response(room_id, response)
@@ -107,7 +112,7 @@ func request_modify_permission(username : String, new_permission : bool):
 	room_details.clear_textbox()
 
 func request_delete_room():
-	var ok = await delete_warning.open_room_warning(room_details.active_room_name)
+	var ok = await warning_notification.open_room_warning(room_details.active_room_name)
 	if not ok:
 		return
 	
@@ -148,7 +153,11 @@ func request_modify_name(new_name : String):
 	room_details.clear_textbox()
 
 func try_logout():
-	pass
+	var ok = await warning_notification.open_logout_warning()
+	if not ok:
+		return
+	
+	PlayerAuth.logout_user()
 
 func initiate_join_room(_socket : WebSocketPeer):
 	var tween = fade_into.create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_QUINT)
@@ -164,7 +173,6 @@ func initiate_join_room(_socket : WebSocketPeer):
 
 func _ready() -> void:
 	room_request.timeout = 6
-	room_request.request_parsed.connect(populate_rooms)
 	add_child(room_request)
 	
 	room_open.timeout = 6

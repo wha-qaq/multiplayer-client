@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://bgwjwdg5fu2qs"]
+[gd_scene load_steps=8 format=3 uid="uid://bgwjwdg5fu2qs"]
 
 [ext_resource type="Script" uid="uid://cp60kidq0vyyw" path="res://Source/UI/room_select.gd" id="1_0dhwt"]
 [ext_resource type="Theme" uid="uid://dyhjmh1vxjsi1" path="res://Content/main_theme.tres" id="2_4ihgt"]
@@ -6,6 +6,10 @@
 [ext_resource type="Script" uid="uid://4pb87lbmwj85" path="res://Source/UI/room_selection.gd" id="3_tff5n"]
 [ext_resource type="Script" uid="uid://cw7fhe4lhnsfl" path="res://Source/UI/warning.gd" id="4_pnaqq"]
 [ext_resource type="PackedScene" uid="uid://bwmfa211x63wn" path="res://Scenes/Objects/notifications.tscn" id="5_o62ik"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_pnaqq"]
+content_margin_left = 16.0
+content_margin_right = 16.0
 
 [node name="RoomSelect" type="Control"]
 layout_mode = 3
@@ -249,6 +253,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2_4ihgt")
 theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxEmpty_pnaqq")
 text = "ROOM NAME"
 vertical_alignment = 1
 
@@ -372,3 +377,4 @@ text = "Logout"
 [connection signal="pressed" from="Refresh" to="." method="refresh_rooms"]
 [connection signal="pressed" from="Warning/Panel/Yes" to="Warning" method="_on_pressed" binds= [true]]
 [connection signal="pressed" from="Warning/Panel/No" to="Warning" method="_on_pressed" binds= [false]]
+[connection signal="pressed" from="Logout" to="." method="try_logout"]
