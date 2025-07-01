@@ -35,7 +35,6 @@ func request_block_auth(url : String, custom_headers : PackedStringArray = Packe
 func parse_request(result : HTTPRequest.Result, response_code : int, _headers : PackedStringArray, body : PackedByteArray) -> Variant:
 	activated.emit(false)
 	if result != RESULT_SUCCESS:
-		print(result)
 		MessagingSystem.add_message("Unable to connect to server at this time")
 		return
 	

@@ -9,6 +9,8 @@ const ROOM_PERM = DOMAIN + "/rooms/modify?room_id=%s&allow=%s"
 const ROOM_RENAME = DOMAIN + "/rooms/modify?room_id=%s&room_name=%s"
 const ROOM_DEL = DOMAIN + "/rooms/modify?room_id=%s"
 
+const LOGOUT = DOMAIN + "/users/logout"
+
 @onready var room_example = $RoomExample
 @onready var room_details = $RoomDetails
 @onready var room_initiate = $RoomInitiate
@@ -17,6 +19,7 @@ const ROOM_DEL = DOMAIN + "/rooms/modify?room_id=%s"
 
 @onready var select_prompt = $RoomDetails/SelectPrompt
 @onready var delete_warning = $Warning
+@onready var fade_into = $FadeInto
 
 @onready var room_request : RequestHandler = RequestHandler.new()
 @onready var room_open : RequestHandler = RequestHandler.new()
@@ -104,7 +107,7 @@ func request_modify_permission(username : String, new_permission : bool):
 	room_details.clear_textbox()
 
 func request_delete_room():
-	var ok = await delete_warning.open_warning(room_details.active_room_name)
+	var ok = await delete_warning.open_room_warning(room_details.active_room_name)
 	if not ok:
 		return
 	
@@ -144,7 +147,19 @@ func request_modify_name(new_name : String):
 		room.display(new_name, room.id)
 	room_details.clear_textbox()
 
+func try_logout():
+	pass
+
 func initiate_join_room(_socket : WebSocketPeer):
+	var tween = fade_into.create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_QUINT)
+	
+	fade_into.modulate.a = 0
+	fade_into.show()
+	
+	tween.tween_property(fade_into, "modulate:a", 1.0, 0.8)
+	tween.tween_interval(0.4)
+	
+	await tween.finished
 	get_tree().change_scene_to_file("res://Scenes/main_room.tscn")
 
 func _ready() -> void:

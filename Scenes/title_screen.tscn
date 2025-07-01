@@ -57,6 +57,20 @@ theme = ExtResource("1_ak2if")
 text = "Start"
 metadata/_edit_use_anchors_ = true
 
+[node name="CreditsButton" type="Button" parent="."]
+custom_minimum_size = Vector2(96, 48)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -16.0
+offset_bottom = -16.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "Credits"
+
 [node name="AuthPanel" type="Control" parent="."]
 visible = false
 layout_mode = 1
@@ -258,7 +272,78 @@ theme = ExtResource("1_ak2if")
 [node name="Notifications" parent="." instance=ExtResource("3_4gxqj")]
 layout_mode = 1
 
+[node name="Credits" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchor_left = 0.0503472
+anchor_top = 0.0632716
+anchor_right = 0.949653
+anchor_bottom = 0.936728
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="Panel" type="Panel" parent="Credits"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="Credits"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_top = 16.0
+grow_horizontal = 2
+theme_type_variation = &"HeaderLarge"
+theme_override_font_sizes/font_size = 64
+text = "CREDITS"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Panel2" type="Panel" parent="Credits"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -355.0
+offset_top = 124.0
+offset_right = 355.0
+grow_horizontal = 2
+
+[node name="Credit1" type="Label" parent="Credits"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_top = 128.0
+offset_right = -8.0
+grow_horizontal = 0
+text = "Assets from 'Sprout Lands' by Cup Nooble"
+horizontal_alignment = 2
+
+[node name="Credit1Link" type="LinkButton" parent="Credits"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = 8.0
+offset_top = 128.0
+text = "https://cupnooble.itch.io/"
+uri = "https://cupnooble.itch.io/"
+
+[node name="HideCredits" type="Button" parent="Credits"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+text = "X"
+
 [connection signal="pressed" from="PlayButton" to="." method="start_playing"]
+[connection signal="pressed" from="CreditsButton" to="Credits" method="show"]
 [connection signal="text_submitted" from="AuthPanel/SignIn/Username" to="." method="start_sign_in"]
 [connection signal="text_submitted" from="AuthPanel/SignIn/Password" to="." method="start_sign_in"]
 [connection signal="pressed" from="AuthPanel/SignIn/ConfirmSignIn" to="." method="start_sign_in"]
@@ -268,3 +353,4 @@ layout_mode = 1
 [connection signal="text_submitted" from="AuthPanel/SignUp/PasswordConfirm" to="." method="start_sign_up"]
 [connection signal="pressed" from="AuthPanel/SignUp/ConfirmSignUp" to="." method="start_sign_up"]
 [connection signal="pressed" from="AuthPanel/SignUp/ShowSignIn" to="." method="_show_sign_in"]
+[connection signal="pressed" from="Credits/HideCredits" to="Credits" method="hide"]

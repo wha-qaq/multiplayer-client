@@ -7,6 +7,11 @@ const INTERPOLATION_TIME = 0.15
 func _ready():
 	$BaseReplication.hide()
 
+func get_dir_from(vector : Vector2):
+	if abs(vector.y) >= abs(vector.x):
+		return "up" if vector.y < 0 else "down"
+	return "left" if vector.x < 0 else "right"
+
 func spawn_character(uid : int, player_name : String, character_position : Vector2):
 	var clone = $BaseReplication.duplicate()
 	clone.set_meta("uid", uid)
@@ -46,9 +51,23 @@ func move_character(uid : int, character_position : Vector2):
 		character.get_meta("tween").kill()
 		interpolation_time = INTERPOLATION_TIME
 	
+	var sprite_2d = character.get_node("AnimatedSprite2D")
+	var velocity = character_position - character.global_position
+	
 	var tween = character.create_tween()
 	tween.tween_property(character, "global_position", character_position, interpolation_time)
+	
 	character.set_meta("tween", tween)
+	
+	if not sprite_2d:
+		return
+	
+	if velocity.length_squared() > 32:
+		sprite_2d.play("walk_" + get_dir_from(velocity))
+		tween.tween_callback(sprite_2d.play.bind("idle_" + get_dir_from(velocity)))
+		return
+	if "walk" in sprite_2d.animation:
+		sprite_2d.play(sprite_2d.animation.replace("walk", "idle"))
 
 func del_character(uid):
 	var character = find_character(uid)

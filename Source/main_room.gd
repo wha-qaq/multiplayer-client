@@ -9,8 +9,10 @@ var change_pattern = RegEx.create_from_string("^(\\d+)([/jmln])(.*)$")
 
 @onready var message_logs = $GUI/MessageLogs
 @onready var settings_menu = $GUI/SettingsMenu
-@onready var deselect = $GUI/DeselectFrame
 @onready var message_box = $GUI/Main/MessageBox
+
+@onready var deselect = $GUI/DeselectFrame
+@onready var fade_out = $GUI/FadeOut
 
 var active_players : Array[Dictionary] = []
 
@@ -88,7 +90,6 @@ func handle_change(full_change : String):
 	
 	if change == "j":
 		var char_details = data.split(",", true, 2)
-		print(char_details)
 		if char_details.size() < 3:
 			return
 		
@@ -123,6 +124,8 @@ func handle_move(full_move : String):
 	move_character(uid, Vector2(float(positioning[0]), float(positioning[1])))
 
 func _ready() -> void:
+	fade_out.show()
+	
 	RoomConnector.change_received.connect(handle_change)
 	RoomConnector.move_received.connect(handle_move)
 	RoomConnector.request_joined()
@@ -136,6 +139,11 @@ func _ready() -> void:
 	)
 	
 	get_viewport().gui_focus_changed.connect(_on_change_focus)
+	
+	var tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_QUINT)
+	tween.tween_interval(0.4)
+	tween.tween_property(fade_out, "modulate:a", 0.0, 0.8)
+	tween.tween_callback(fade_out.hide)
 
 func _process(_delta: float) -> void:
 	if not RoomConnector.is_room_connected():

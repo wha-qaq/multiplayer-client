@@ -36,11 +36,11 @@ func is_room_connected() -> bool:
 
 func join_room() -> bool:
 	if active_room < 0:
-		print("No room selected")
+		MessagingSystem.add_message("No room selected")
 		return false
 	
 	if socket.get_ready_state() != WebSocketPeer.STATE_CLOSED:
-		print("Already connecting")
+		MessagingSystem.add_message("Already connecting")
 		return false
 	
 	var port = 10000
@@ -56,7 +56,7 @@ func join_room() -> bool:
 		
 	socket.handshake_headers = [PlayerAuth.get_auth_token(), "port:%s" % port]
 	socket.connect_to_url(JOIN_ROOM % active_room)
-	print("Trying to connect")
+	MessagingSystem.add_message("Trying to connect")
 	set_process(true)
 	return true
 
