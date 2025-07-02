@@ -1,10 +1,13 @@
 extends Control
 
+const MINIMUM_SIZE = 800
+
 @onready var base_user = $User
 @onready var base_message = $Message
 @onready var spacer = $Spacer
 
 @onready var message_log = $Panel/Scroll/Vertical
+@onready var panel = $Panel
 
 var last_id = -1
 
@@ -48,3 +51,17 @@ func _refresh_messages() -> void:
 
 func _ready() -> void:
 	display_messages()
+	get_viewport().size_changed.connect(_resize_panel)
+
+func _resize_panel() -> void:
+	if get_viewport_rect().size.x <= MINIMUM_SIZE:
+		panel.anchor_left = 0
+		panel.offset_left = 16
+		panel.anchor_right = 0
+		panel.grow_horizontal = GrowDirection.GROW_DIRECTION_END
+		return
+	
+	panel.anchor_left = 0.2
+	panel.offset_left = 0
+	panel.anchor_right = 0.8
+	panel.grow_horizontal = GrowDirection.GROW_DIRECTION_BOTH

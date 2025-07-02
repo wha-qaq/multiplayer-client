@@ -57,10 +57,16 @@ func get_uid():
 
 func request_login(username : String, password : String):
 	var response = await request.request_block(LOGIN % [username.uri_encode(), password.uri_encode()], [], HTTPClient.METHOD_POST)
+	if response is not Dictionary:
+		return
+	
 	_token_recieved(response)
 
 func request_creation(username : String, password : String):
-	var response = await request.open_request(CREATE_ACCOUNT % [username.uri_encode(), password.uri_encode()], [], HTTPClient.METHOD_POST)
+	var response = await request.request_block(CREATE_ACCOUNT % [username.uri_encode(), password.uri_encode()], [], HTTPClient.METHOD_POST)
+	if response is not Dictionary:
+		return
+	
 	_token_recieved(response)
 
 func invalidate_token():

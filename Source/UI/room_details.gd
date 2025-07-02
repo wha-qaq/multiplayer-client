@@ -4,7 +4,7 @@ signal room_change_name(new_name : String)
 signal change_permission(user : String, new_permission : bool)
 
 @onready var user_example = $User
-@onready var container = $ScrollContainer/Container
+@onready var container = $Scrolling/Container
 
 @onready var modify_edit = $ModifyEdit
 @onready var modify_button = $ModifyRoomButton

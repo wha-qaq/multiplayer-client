@@ -10,12 +10,13 @@ const ROOM_RENAME = DOMAIN + "/rooms/modify?room_id=%s&room_name=%s"
 const ROOM_DEL = DOMAIN + "/rooms/modify?room_id=%s"
 
 @onready var room_example = $RoomExample
-@onready var room_details = $RoomDetails
-@onready var room_initiate = $RoomInitiate
+@onready var room_details = $Scroll/Box/Vertical/RoomDetails
+@onready var room_initiate = $Scroll/Box/Vertical/RoomInitiate
 
-@onready var room_container = $Rooms/Scrolling/Margin/Container
+@onready var room_container = $Scroll/Box/Rooms/Scrolling/Margin/Container
 
-@onready var select_prompt = $RoomDetails/SelectPrompt
+@onready var select_prompt = $Scroll/Box/Vertical/RoomDetails/SelectPrompt
+@onready var missing_rooms = $Scroll/Box/Rooms/MissingRooms
 @onready var warning_notification = $Warning
 @onready var fade_into = $FadeInto
 
@@ -51,6 +52,8 @@ func populate_rooms(response):
 	for child in room_container.get_children():
 		child.queue_free()
 	
+	missing_rooms.visible = len(rooms) == 0
+	
 	for room in rooms:
 		var room_name = room.get("name")
 		var id = room.get("id")
@@ -82,18 +85,23 @@ func reflect_added(response):
 
 func request_rooms():
 	var response = await room_request.request_block_auth(ROOM_ACCESS)
+	if response is not Dictionary:
+		return
+	
 	populate_rooms(response)
 
 func request_create_room():
 	var response = await room_open.request_block_auth(ROOM_CREATE, [], HTTPClient.METHOD_PUT)
-	if not response:
+	if response is not Dictionary:
 		return
+	
 	reflect_added(response)
 
 func request_get_room(room_id : int):
 	var response = await room_open.request_block_auth(ROOM_GET % room_id, [], HTTPClient.METHOD_GET)
 	if response is not Dictionary:
 		return
+	
 	room_details.populate_details(response)
 	RoomConnector.prepare_room_by_response(room_id, response)
 
@@ -107,6 +115,8 @@ func request_modify_permission(username : String, new_permission : bool):
 	var body = JSON.stringify([username])
 	
 	var response = await room_post.request_block_auth(req, headers, HTTPClient.METHOD_POST, body)
+	if response is not Dictionary:
+		return
 	
 	room_details.reflect_change(response)
 	room_details.clear_textbox()
@@ -117,7 +127,7 @@ func request_delete_room():
 		return
 	
 	var response = await room_post.request_block_auth(ROOM_DEL % [selected_room], [], HTTPClient.METHOD_DELETE)
-	if not response:
+	if response is not Dictionary:
 		return
 	
 	var message_count = response.get("messages_deleted") as int
@@ -137,9 +147,8 @@ func request_modify_name(new_name : String):
 		return
 	
 	var req = ROOM_RENAME % [selected_room, new_name.uri_encode()]
-	var response = await room_post.request_block_auth(req, [], HTTPClient.METHOD_POST)
-	
-	if not response:
+	var ok = await room_post.request_block_auth(req, [], HTTPClient.METHOD_POST)
+	if not ok:
 		return
 	
 	room_details.active_room_name = new_name

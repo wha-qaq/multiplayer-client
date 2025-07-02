@@ -152,4 +152,7 @@ func prepare_room_by_response(room_id, response):
 
 func reload_messages():
 	var room_response = await room_get_request.request_block_auth(GET_ROOM % [active_room], [], HTTPClient.METHOD_GET)
+	if room_response is not Dictionary:
+		return
+	
 	prepare_room_by_response(active_room, room_response)
