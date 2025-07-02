@@ -236,6 +236,7 @@ metadata/_edit_use_anchors_ = true
 visible = false
 custom_minimum_size = Vector2(196, 196)
 layout_mode = 1
+anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = 64.0
