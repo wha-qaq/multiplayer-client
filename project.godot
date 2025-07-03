@@ -10,10 +10,15 @@ config_version=5
 
 [application]
 
-config/name="game-client"
+config/name="hangout-game"
+config/description="Start playing!"
 run/main_scene="res://Scenes/title_screen.tscn"
 config/features=PackedStringArray("4.4", "Forward Plus")
-config/icon="res://icon.svg"
+boot_splash/bg_color=Color(0.596078, 0.631373, 0.737255, 1)
+boot_splash/show_image=false
+boot_splash/use_filter=false
+config/icon="uid://x153rch8wscs"
+config/windows_native_icon="res://Content/game icon.ico"
 
 [autoload]
 
@@ -21,6 +26,11 @@ PlayerAuth="*res://Source/Networking/player_auth.gd"
 MessagingSystem="*res://Source/messaging_system.gd"
 RoomConnector="*res://Source/room_connector.gd"
 Background="res://Scenes/Objects/background.tscn"
+
+[display]
+
+window/size/viewport_width=800
+window/size/viewport_height=600
 
 [gui]
 
