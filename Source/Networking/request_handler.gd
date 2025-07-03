@@ -40,8 +40,11 @@ func parse_request(result : HTTPRequest.Result, response_code : int, _headers : 
 		return
 	
 	if response_code == HTTPClient.RESPONSE_UNAUTHORIZED:
+		MessagingSystem.disconnect_connectors()
 		MessagingSystem.add_message("Please login again")
 		request_parsed.emit(null)
+		
+		PlayerAuth.invalidate_token()
 		return
 	
 	if response_code == HTTPClient.RESPONSE_INTERNAL_SERVER_ERROR:
