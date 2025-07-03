@@ -34,6 +34,7 @@ func change_selection(new_room : int, room_name : String):
 	if selected_room < 0:
 		room_initiate.text = "Create Room"
 		select_prompt.show()
+		RoomConnector.deselect_room()
 		return
 	
 	room_initiate.text = "Join Room"
@@ -121,6 +122,16 @@ func request_modify_permission(username : String, new_permission : bool):
 	room_details.reflect_change(response)
 	room_details.clear_textbox()
 
+func find_room_gui(room_id : int) -> RoomButton:
+	for item in room_container.get_children():
+		var room = item as RoomButton
+		if not room:
+			continue
+		if room.id != room_id:
+			continue
+		return room
+	return null
+
 func request_delete_room():
 	var ok = await warning_notification.open_room_warning(room_details.active_room_name)
 	if not ok:
@@ -135,8 +146,12 @@ func request_delete_room():
 	message_count = message_count if message_count else 0
 	users = users if users else 0
 	
-	MessagingSystem.add_message("Deleted %s messages and removed %s users" % [message_count, len(users)])
-	room_details.clear_textbox()
+	MessagingSystem.add_message("Deleted %s messages and removed %s users" % [message_count, users])
+	room_details.clear_details()
+	var room = find_room_gui(selected_room)
+	if room:
+		room.queue_free()
+	change_selection(-1, "")
 
 func request_modify_name(new_name : String):
 	if selected_room < 0:
@@ -152,12 +167,8 @@ func request_modify_name(new_name : String):
 		return
 	
 	room_details.active_room_name = new_name
-	for item in room_container.get_children():
-		var room = item as RoomButton
-		if not room:
-			continue
-		if room.id != selected_room:
-			continue
+	var room = find_room_gui(selected_room)
+	if room:
 		room.display(new_name, room.id)
 	room_details.clear_textbox()
 
@@ -201,7 +212,7 @@ func _ready() -> void:
 
 func refresh_rooms():
 	room_details.clear_details()
-	RoomConnector.deselect_room()
+	change_selection(-1, "")
 	room_initiate.text = "Create Room"
 	select_prompt.show()
 	request_rooms()

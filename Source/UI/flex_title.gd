@@ -6,3 +6,4 @@ func _resized():
 
 func _ready() -> void:
 	get_viewport().size_changed.connect(_resized)
+	_resized()
